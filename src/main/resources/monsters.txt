@@ -1,0 +1,126 @@
+Monster
+    Name	Pikachu
+    Type	THUNDER
+    HP	35
+    Attack	55
+    Defense	40
+    Speed	90
+    Paralysis	0.3
+EndMonster
+
+Monster
+    Name	Raichu
+    Type	THUNDER
+    HP	60
+    Attack	90
+    Defense	55
+    Speed	110
+    Paralysis	0.3
+EndMonster
+
+Monster
+    Name	Carapuce
+    Type	WATER
+    HP	44
+    Attack	48
+    Defense	65
+    Speed	43
+    Flood	0.3
+EndMonster
+
+Monster
+    Name	Tortank
+    Type	WATER
+    HP	79
+    Attack	83
+    Defense	100
+    Speed	78
+    Flood	0.3
+EndMonster
+
+Monster
+    Name	Salamèche
+    Type	FIRE
+    HP	39
+    Attack	52
+    Defense	43
+    Speed	65
+    Burn	0.3
+EndMonster
+
+Monster
+    Name	Dracaufeu
+    Type	FIRE
+    HP	78
+    Attack	84
+    Defense	78
+    Speed	100
+    Burn	0.3
+EndMonster
+
+Monster
+    Name	Bulbizarre
+    Type	PLANT
+    HP	45
+    Attack	49
+    Defense	49
+    Speed	45
+    Heal	0.3
+EndMonster
+
+Monster
+    Name	Florizarre
+    Type	PLANT
+    HP	80
+    Attack	82
+    Defense	83
+    Speed	80
+    Heal	0.3
+EndMonster
+
+Monster
+    Name	Papilusion
+    Type	INSECT
+    HP	60
+    Attack	45
+    Defense	50
+    Speed	70
+    Poison	0.3
+EndMonster
+
+Monster
+    Name	Dardargnan
+    Type	INSECT
+    HP	65
+    Attack	90
+    Defense	40
+    Speed	75
+    Poison	0.3
+EndMonster
+
+Monster
+    Name	Sabelette
+    Type	EARTH
+    HP	50
+    Attack	75
+    Defense	85
+    Speed	40
+EndMonster
+
+Monster
+    Name	Sablaireau
+    Type	EARTH
+    HP	75
+    Attack	100
+    Defense	110
+    Speed	65
+EndMonster
+
+Monster
+    Name	Chenipan
+    Type	INSECT
+    HP	45
+    Attack	30
+    Defense	35
+    Speed	45
+EndMonster

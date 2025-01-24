@@ -1,0 +1,143 @@
+Attack
+Name: Éclair
+Type: THUNDER
+Power: 40
+NbUse: 30
+Fail: 0
+EndAttack
+
+Attack
+Name: Fatal-Foudre
+Type: THUNDER
+Power: 110
+NbUse: 10
+Fail: 0.3
+EndAttack
+
+Attack
+Name: Tonnerre
+Type: THUNDER
+Power: 90
+NbUse: 15
+Fail: 0
+EndAttack
+
+Attack
+Name: Pistolet à O
+Type: WATER
+Power: 40
+NbUse: 25
+Fail: 0
+EndAttack
+
+Attack
+Name: Hydrocanon
+Type: WATER
+Power: 110
+NbUse: 5
+Fail: 0.2
+EndAttack
+
+Attack
+Name: Surf
+Type: WATER
+Power: 90
+NbUse: 15
+Fail: 0
+EndAttack
+
+Attack
+Name: Flammèche
+Type: FIRE
+Power: 40
+NbUse: 25
+Fail: 0
+EndAttack
+
+Attack
+Name: Lance-Flammes
+Type: FIRE
+Power: 90
+NbUse: 15
+Fail: 0
+EndAttack
+
+Attack
+Name: Déflagration
+Type: FIRE
+Power: 110
+NbUse: 5
+Fail: 0.15
+EndAttack
+
+Attack
+Name: Fouet Lianes
+Type: PLANT
+Power: 45
+NbUse: 25
+Fail: 0
+EndAttack
+
+Attack
+Name: Lance-Soleil
+Type: PLANT
+Power: 120
+NbUse: 10
+Fail: 0
+EndAttack
+
+Attack
+Name: Tranch'Herbe
+Type: PLANT
+Power: 55
+NbUse: 25
+Fail: 0.05
+EndAttack
+
+Attack
+Name: Dard-Venin
+Type: INSECT
+Power: 15
+NbUse: 35
+Fail: 0
+EndAttack
+
+Attack
+Name: Double-Dard
+Type: INSECT
+Power: 25
+NbUse: 20
+Fail: 0
+EndAttack
+
+Attack
+Name: Piqûre
+Type: INSECT
+Power: 60
+NbUse: 20
+Fail: 0
+EndAttack
+
+Attack
+Name: Séisme
+Type: EARTH
+Power: 100
+NbUse: 10
+Fail: 0
+EndAttack
+
+Attack
+Name: Tunnel
+Type: EARTH
+Power: 80
+NbUse: 10
+Fail: 0
+EndAttack
+
+Attack
+Name: Jet-Pierres
+Type: EARTH
+Power: 50
+NbUse: 15
+Fail: 0
+EndAttack

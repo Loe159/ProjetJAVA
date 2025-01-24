@@ -1,0 +1,16 @@
+# Format: Name:Type:Value:InitialQuantity
+# Types: POTION, BOOST_ATTACK, BOOST_DEFENSE, BOOST_SPEED, ANTIDOTE, ANTI_BURN
+# Value: Nombre de points restaurés/augmentés
+
+Potion:POTION:50:3
+Super Potion:POTION:100:2
+Hyper Potion:POTION:200:1
+
+Protéine:BOOST_ATTACK:10:2
+Fer:BOOST_DEFENSE:10:2
+Carbone:BOOST_SPEED:10:2
+
+Antidote:ANTIDOTE:0:2
+Anti-Brûle:ANTI_BURN:0:2
+
+EndItems 
