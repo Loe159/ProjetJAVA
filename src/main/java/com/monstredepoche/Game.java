@@ -51,11 +51,11 @@ public class Game {
             List<Item> items = gameLoader.getAvailableItems();
             if (!items.isEmpty()) {
                 if (choice == 1) {
-                    distributeItems(player1, items);
-                    distributeItems(player2, items);
+                    distributeItems(player1);
+                    distributeItems(player2);
                 } else {
-                    distributeRandomItems(player1, items);
-                    distributeRandomItems(player2, items);
+                    distributeRandomItems(player1);
+                    distributeRandomItems(player2);
                 }
             }
 
@@ -83,27 +83,43 @@ public class Game {
             }
 
             for (int i = 0; i < 3 && !availableMonsters.isEmpty(); i++) {
-                System.out.println("\nChoisissez le monstre " + (i + 1) + ":");
-                displayMonsterList(availableMonsters);
-                
-                Monster selectedMonster = selectMonster(availableMonsters).clone();
-                List<Attack> compatibleAttacks = new ArrayList<>(gameLoader.getCompatibleAttacks(selectedMonster));
-                
-                if (compatibleAttacks.isEmpty()) {
-                    throw new RuntimeException("Aucune attaque compatible pour " + selectedMonster.getName());
-                }
+                boolean monsterSelected = false;
+                while (!monsterSelected) {
+                    System.out.println("\nChoisissez le monstre " + (i + 1) + ":");
+                    displayMonsterList(availableMonsters);
+                    
+                    Monster selectedMonster = selectMonster(availableMonsters);
+                    if (selectedMonster == null) {
+                        continue;
+                    }
+                    
+                    selectedMonster = selectedMonster.clone();
+                    List<Attack> compatibleAttacks = new ArrayList<>(gameLoader.getCompatibleAttacks(selectedMonster));
+                    
+                    if (compatibleAttacks.isEmpty()) {
+                        throw new RuntimeException("Aucune attaque compatible pour " + selectedMonster.getName());
+                    }
 
-                System.out.println("\nChoisissez 4 attaques pour " + selectedMonster.getName() + ":");
-                for (int j = 0; j < 4 && !compatibleAttacks.isEmpty(); j++) {
-                    displayAttackList(compatibleAttacks);
-                    Attack selectedAttack = selectAttack(compatibleAttacks);
-                    selectedMonster.addAttack(selectedAttack);
-                    compatibleAttacks.remove(selectedAttack);
+                    System.out.println("\nChoisissez 4 attaques pour " + selectedMonster.getName() + ":");
+                    int attackCount = 0;
+                    while (attackCount < 4 && !compatibleAttacks.isEmpty()) {
+                        displayAttackList(compatibleAttacks);
+                        Attack selectedAttack = selectAttack(compatibleAttacks);
+                        if (selectedAttack == null) {
+                            continue;
+                        }
+                        selectedMonster.addAttack(selectedAttack);
+                        compatibleAttacks.remove(selectedAttack);
+                        attackCount++;
+                    }
+                    
+                    if (attackCount == 4) {
+                        player.addMonster(selectedMonster);
+                        availableMonsters.remove(selectedMonster);
+                        System.out.println(selectedMonster.getName() + " ajouté à l'équipe de " + name);
+                        monsterSelected = true;
+                    }
                 }
-                
-                player.addMonster(selectedMonster);
-                availableMonsters.remove(selectedMonster);
-                System.out.println(selectedMonster.getName() + " ajouté à l'équipe de " + name);
             }
 
             return player;
@@ -156,11 +172,13 @@ public class Game {
         }
     }
 
-    private void distributeItems(Player player, List<Item> availableItems) {
+    private void distributeItems(Player player) {
         System.out.println("\nDistribution des objets pour " + player.getName() + ":");
         System.out.println("Vous pouvez choisir jusqu'à 3 objets.");
+
+        List<Item> availableItems = new ArrayList<>(gameLoader.getAvailableItems());
         
-        for (int i = 0; i < 3 && !availableItems.isEmpty(); i++) {
+        for (int i = 0; i < 5 && !availableItems.isEmpty(); i++) {
             displayItemList(availableItems);
 
             System.out.print("Votre choix (1-" + availableItems.size() + ", 0 pour terminer): ");
@@ -169,21 +187,21 @@ public class Game {
             if (choice == 0) break;
             
             Item selectedItem = availableItems.get(choice - 1);
-            player.addItem(new Item(selectedItem.getName(), selectedItem.getType(), 
-                                  selectedItem.getValue(), selectedItem.getQuantity()));
+            player.addItem(selectedItem.clone());
+            availableItems.remove(selectedItem);
             System.out.println(selectedItem.getName() + " ajouté à l'inventaire de " + player.getName());
         }
     }
 
-    private void distributeRandomItems(Player player, List<Item> availableItems) {
+    private void distributeRandomItems(Player player) {
+        List<Item> availableItems = new ArrayList<>(gameLoader.getAvailableItems());
+
         System.out.println("\nDistribution aléatoire des objets pour " + player.getName());
-        int numItems = random.nextInt(3) + 1; // 1 à 3 objets
-        
-        for (int i = 0; i < numItems && !availableItems.isEmpty(); i++) {
+
+        for (int i = 0; i < 5 && !availableItems.isEmpty(); i++) {
             int index = random.nextInt(availableItems.size());
             Item selectedItem = availableItems.get(index);
-            player.addItem(new Item(selectedItem.getName(), selectedItem.getType(), 
-                                  selectedItem.getValue(), selectedItem.getQuantity()));
+            player.addItem(selectedItem.clone());
             System.out.println(selectedItem.getName() + " ajouté à l'inventaire de " + player.getName());
         }
     }
@@ -223,17 +241,23 @@ public class Game {
 
     private Monster selectMonster(List<Monster> monsters) {
         while (true) {
-            System.out.print("Votre choix (1-" + monsters.size() + "): ");
-            int choice = getIntInput(1, monsters.size()) - 1;
-            return monsters.get(choice);
+            System.out.print("Votre choix (1-" + monsters.size() + ", 0 pour annuler): ");
+            int choice = getIntInput(0, monsters.size());
+            if (choice == 0) {
+                return null;
+            }
+            return monsters.get(choice - 1);
         }
     }
 
     private Attack selectAttack(List<Attack> attacks) {
         while (true) {
-            System.out.print("Votre choix (1-" + attacks.size() + "): ");
-            int choice = getIntInput(1, attacks.size()) - 1;
-            return attacks.get(choice);
+            System.out.print("Votre choix (1-" + attacks.size() + ", 0 pour annuler): ");
+            int choice = getIntInput(0, attacks.size());
+            if (choice == 0) {
+                return null;
+            }
+            return attacks.get(choice - 1);
         }
     }
 

@@ -107,14 +107,35 @@ public class Battle {
 
         // Phase de sélection
         for (int i = 0; i < 2; i++) {
-            displayMenu(players[i].getName());
-            System.out.print("Votre choix (1-3): ");
+            boolean actionSelected = false;
+            while (!actionSelected) {
+                displayMenu(players[i].getName());
+                System.out.print("Votre choix (1-3): ");
 
-            int choice = getIntInput(1, 3);
-            switch (choice) {
-                case 1 -> selectedAttacks[i] = selectAttack(players[i].getActiveMonster());
-                case 2 -> usedItems[i] = useItem(players[i], players[i].getActiveMonster());
-                case 3 -> switchChoices[i] = selectMonsterToSwitch(players[i]);
+                int choice = getIntInput(1, 3);
+                switch (choice) {
+                    case 1 -> {
+                        Attack attack = selectAttack(players[i].getActiveMonster());
+                        if (attack != null) {
+                            selectedAttacks[i] = attack;
+                            actionSelected = true;
+                        }
+                    }
+                    case 2 -> {
+                        boolean itemUsed = useItem(players[i], players[i].getActiveMonster());
+                        if (itemUsed) {
+                            usedItems[i] = true;
+                            actionSelected = true;
+                        }
+                    }
+                    case 3 -> {
+                        int switchChoice = selectMonsterToSwitch(players[i]);
+                        if (switchChoice >= 0) {
+                            switchChoices[i] = switchChoice;
+                            actionSelected = true;
+                        }
+                    }
+                }
             }
         }
 
@@ -221,9 +242,12 @@ public class Battle {
         }
 
         while (true) {
-            System.out.print("Votre choix (1-" + attacks.size() + "): ");
-            int choice = getIntInput(1, attacks.size()) - 1;
-            Attack selectedAttack = attacks.get(choice);
+            System.out.print("Votre choix (1-" + attacks.size() + ", 0 pour annuler): ");
+            int choice = getIntInput(0, attacks.size());
+            if (choice == 0) {
+                return null;
+            }
+            Attack selectedAttack = attacks.get(choice - 1);
             
             if (selectedAttack.getRemainingUses() > 0) {
                 return selectedAttack;

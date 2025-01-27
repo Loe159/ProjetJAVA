@@ -1,6 +1,6 @@
 package com.monstredepoche.entities;
 
-public class Item {
+public class Item implements Cloneable {
     private final String name;
     private final ItemType type;
     private final int value;
@@ -48,5 +48,14 @@ public class Item {
     @Override
     public String toString() {
         return String.format(" (0) - : 0", name, quantity, this.getDescription());
+    }
+
+    @Override
+    public Item clone() {
+        try {
+            return (Item) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }
