@@ -174,7 +174,7 @@ public class Game {
 
     private void distributeItems(Player player) {
         System.out.println("\nDistribution des objets pour " + player.getName() + ":");
-        System.out.println("Vous pouvez choisir jusqu'à 3 objets.");
+        System.out.println("Vous pouvez choisir jusqu'à 5 objets.");
 
         List<Item> availableItems = new ArrayList<>(gameLoader.getAvailableItems());
         
@@ -187,7 +187,7 @@ public class Game {
             if (choice == 0) break;
             
             Item selectedItem = availableItems.get(choice - 1);
-            player.addItem(selectedItem.clone());
+            player.addItem(selectedItem);
             availableItems.remove(selectedItem);
             System.out.println(selectedItem.getName() + " ajouté à l'inventaire de " + player.getName());
         }
@@ -201,7 +201,7 @@ public class Game {
         for (int i = 0; i < 5 && !availableItems.isEmpty(); i++) {
             int index = random.nextInt(availableItems.size());
             Item selectedItem = availableItems.get(index);
-            player.addItem(selectedItem.clone());
+            player.addItem(selectedItem);
             System.out.println(selectedItem.getName() + " ajouté à l'inventaire de " + player.getName());
         }
     }
@@ -272,6 +272,30 @@ public class Game {
                 // Ignore
             }
             System.out.println("Choix invalide, réessayez.");
+        }
+    }
+
+    private void selectItems(Player player) {
+        List<Item> availableItems = gameLoader.getAvailableItems();
+        if (availableItems.isEmpty()) {
+            System.out.println("Aucun objet disponible !");
+            return;
+        }
+
+        System.out.println("\nChoisissez vos objets (maximum 5) :");
+        for (int i = 0; i < availableItems.size(); i++) {
+            Item item = availableItems.get(i);
+            System.out.printf("%d. %s (%s)%n", i + 1, item.getName(), item.getType());
+        }
+
+        while (player.getItems().size() < 5) {
+            System.out.print("\nEntrez le numéro de l'objet à ajouter (0 pour terminer) : ");
+            int choice = getIntInput(0, availableItems.size());
+            if (choice == 0) break;
+
+            Item selectedItem = availableItems.get(choice - 1);
+            player.addItem(selectedItem);
+            System.out.println("Objet ajouté : " + selectedItem.getName());
         }
     }
 

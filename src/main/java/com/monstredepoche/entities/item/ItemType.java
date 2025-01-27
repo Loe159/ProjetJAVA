@@ -1,10 +1,10 @@
-package com.monstredepoche.entities;
+package com.monstredepoche.entities.item;
 
 public enum ItemType {
-    POTION("Restaure %d PV"),
-    BOOST_ATTACK("Augmente l'attaque de %d"),
-    BOOST_DEFENSE("Augmente la défense de %d"),
-    BOOST_SPEED("Augmente la vitesse de %d"),
+    POTION("Restaure les PV"),
+    ATTACK_BOOST("Augmente l'attaque"),
+    DEFENSE_BOOST("Augmente la défense"),
+    SPEED_BOOST("Augmente la vitesse"),
     ANTIDOTE("Soigne le poison"),
     ANTI_BURN("Soigne les brûlures");
 

@@ -1,15 +1,16 @@
 package com.monstredepoche.entities.item;
 
-import com.monstredepoche.entities.ItemType;
 import com.monstredepoche.entities.StatusEffect;
 
 public class ItemFactory {
-    public static Item createItem(String name, ItemType type, int value, int quantity) {
+    public static Item createItem(String name, ItemType type, int value) {
         return switch (type) {
-            case POTION -> new HealingItem(name, value, quantity);
-            case BOOST_ATTACK, BOOST_DEFENSE, BOOST_SPEED -> new StatBoostItem(name, type, value, quantity);
-            case ANTIDOTE -> new StatusHealItem(name, type, StatusEffect.POISONED, quantity);
-            case ANTI_BURN -> new StatusHealItem(name, type, StatusEffect.BURNED, quantity);
+            case POTION -> new Potion(name, value);
+            case ATTACK_BOOST -> new AttackBoost(name, value);
+            case DEFENSE_BOOST -> new DefenseBoost(name, value);
+            case SPEED_BOOST -> new SpeedBoost(name, value);
+            case ANTIDOTE -> new StatusHealItem(name, type, StatusEffect.POISONED);
+            case ANTI_BURN -> new StatusHealItem(name, type, StatusEffect.BURNED);
         };
     }
 } 

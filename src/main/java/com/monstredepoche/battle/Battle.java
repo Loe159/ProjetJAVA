@@ -122,11 +122,8 @@ public class Battle {
                         }
                     }
                     case 2 -> {
-                        boolean itemUsed = useItem(players[i], players[i].getActiveMonster());
-                        if (itemUsed) {
-                            usedItems[i] = true;
-                            actionSelected = true;
-                        }
+                        useItem(players[i]);
+                        actionSelected = true;
                     }
                     case 3 -> {
                         int switchChoice = selectMonsterToSwitch(players[i]);
@@ -185,35 +182,22 @@ public class Battle {
         }
     }
 
-    private boolean useItem(Player player, Monster target) {
+    private void useItem(Player player) {
         List<Item> items = player.getItems();
         if (items.isEmpty()) {
-            System.out.println("Vous n'avez pas d'objets !");
-            return false;
+            System.out.println("Vous n'avez aucun objet !");
+            return;
         }
 
-        System.out.println("\nObjets disponibles :");
-        for (int i = 0; i < items.size(); i++) {
-            System.out.printf("%d. %s (%s)%n", i + 1, items.get(i).getName(), items.get(i).getDescription());
-        }
-
-        System.out.print("Votre choix (1-" + items.size() + ", 0 pour annuler): ");
+        displayItemMenu(player);
+        System.out.print("\nChoisissez un objet à utiliser (0 pour annuler) : ");
         int choice = getIntInput(0, items.size());
-        
-        if (choice == 0) {
-            return false;
-        }
+        if (choice == 0) return;
 
         Item selectedItem = items.get(choice - 1);
-        boolean used = player.useItem(selectedItem, target);
-        
-        if (used) {
-            System.out.println(player.getName() + " utilise " + selectedItem.getName() + " sur " + target.getName());
-        } else {
-            System.out.println("Impossible d'utiliser cet objet maintenant !");
-        }
-        
-        return used;
+        Monster target = player.getActiveMonster();
+        player.useItem(selectedItem, target);
+        System.out.println(player.getName() + " utilise " + selectedItem.getName() + " sur " + target.getName());
     }
 
     private Attack selectAttack(Monster monster) {
@@ -367,6 +351,15 @@ public class Battle {
                 System.err.println("Erreur lors du changement de monstre: " + e.getMessage());
             }
             System.out.println("Choix invalide, réessayez.");
+        }
+    }
+
+    private void displayItemMenu(Player player) {
+        List<Item> items = player.getItems();
+        System.out.println("\nObjets disponibles pour " + player.getName() + ":");
+        for (int i = 0; i < items.size(); i++) {
+            Item item = items.get(i);
+            System.out.printf("%d. %s (%s)%n", i + 1, item.getName(), item.getType());
         }
     }
 } 

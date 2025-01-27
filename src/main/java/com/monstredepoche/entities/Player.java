@@ -1,7 +1,7 @@
 package com.monstredepoche.entities;
 
-import com.monstredepoche.entities.monsters.Monster;
 import com.monstredepoche.entities.item.Item;
+import com.monstredepoche.entities.monsters.Monster;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,9 +19,11 @@ public class Player {
     }
 
     public void addMonster(Monster monster) {
-        monsters.add(monster);
-        if (activeMonster == null) {
-            activeMonster = monster;
+        if (monsters.size() < 3) {
+            monsters.add(monster);
+            if (activeMonster == null) {
+                activeMonster = monster;
+            }
         }
     }
 
@@ -29,34 +31,38 @@ public class Player {
         monsters.remove(monster);
     }
 
-
     public void addItem(Item item) {
         if (items.size() < 5) {  // Maximum 5 objets par joueur selon les consignes
             items.add(item);
         }
     }
 
-    public List<Item> getItems() {
-        return new ArrayList<>(items);
+    public void useItem(Item item, Monster target) {
+        if (items.contains(item)) {
+            item.use(target);
+            items.remove(item);  // L'objet est consommé après utilisation
+        }
     }
 
-    public boolean useItem(Item item, Monster target) {
-        if (!items.contains(item) || item.getQuantity() <= 0) {
-            return false;
+    public boolean switchMonster(int index) {
+        if (index >= 0 && index < monsters.size()) {
+            Monster selectedMonster = monsters.get(index);
+            if (!selectedMonster.isDead() && selectedMonster != activeMonster) {
+                activeMonster = selectedMonster;
+                return true;
+            }
         }
-
-        item.use(target);
-        return true;
+        return false;
     }
 
-    public void switchMonster(int index) {
-        if (index >= 0 && index < monsters.size() && monsters.get(index) != activeMonster && !monsters.get(index).isDead()) {
-            activeMonster = monsters.get(index);
-        }
+    public List<Monster> getAliveMonsters() {
+        return monsters.stream()
+                .filter(monster -> !monster.isDead())
+                .toList();
     }
 
     public boolean hasLost() {
-        return getMonsters().isEmpty();
+        return getAliveMonsters().isEmpty();
     }
 
     public String getName() {
@@ -64,7 +70,11 @@ public class Player {
     }
 
     public List<Monster> getMonsters() {
-        return new ArrayList<>(monsters);
+        return monsters;
+    }
+
+    public List<Item> getItems() {
+        return items;
     }
 
     public Monster getActiveMonster() {

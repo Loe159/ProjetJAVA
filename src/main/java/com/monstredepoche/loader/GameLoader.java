@@ -31,22 +31,41 @@ public class GameLoader {
 
         try {
             // Chargement des monstres
-            availableMonsters = monsterLoader.loadMonsters();
-            System.out.println(availableMonsters.size() + " monstres chargés.");
-
-            // Chargement des attaques
-            availableAttacks = attackLoader.loadAttacks();
-            System.out.println(availableAttacks.size() + " attaques chargées.");
-
-            // Chargement des objets
-            availableItems = itemLoader.loadItems();
-            System.out.println(availableItems.size() + " objets chargés.");
-
-            System.out.println("Chargement terminé avec succès !");
+            availableMonsters = monsterLoader.loadEntities();
+            System.out.println("Monstres chargés: " + availableMonsters.size());
+            for (Monster monster : availableMonsters) {
+                System.out.println(monster.getName() + " - " + monster.getType());
+            }
         } catch (Exception e) {
-            System.err.println("Erreur lors du chargement des données du jeu: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("Erreur lors du chargement des monstres: " + e.getMessage());
+            availableMonsters = List.of();
         }
+
+        try {
+            // Chargement des attaques
+            availableAttacks = attackLoader.loadEntities();
+            System.out.println("\nAttaques chargées: " + availableAttacks.size());
+            for (Attack attack : availableAttacks) {
+                System.out.println(attack.getName() + " - " + attack.getType());
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement des attaques: " + e.getMessage());
+            availableAttacks = List.of();
+        }
+
+        try {
+            // Chargement des objets
+            availableItems = itemLoader.loadEntities();
+            System.out.println("\nObjets chargés: " + availableItems.size());
+            for (Item item : availableItems) {
+                System.out.println(item.getName() + " - " + item.getType());
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement des objets: " + e.getMessage());
+            availableItems = List.of();
+        }
+
+        System.out.println("Chargement terminé avec succès !");
     }
 
     /**
