@@ -1,6 +1,6 @@
 package com.monstredepoche;
 
-import com.monstredepoche.entities.Attack;
+import com.monstredepoche.entities.attacks.Attack;
 import com.monstredepoche.entities.Item;
 import com.monstredepoche.entities.Player;
 import com.monstredepoche.entities.monsters.Monster;
@@ -86,7 +86,7 @@ public class Game {
                 System.out.println("\nChoisissez le monstre " + (i + 1) + ":");
                 displayMonsterList(availableMonsters);
                 
-                Monster selectedMonster = selectMonster(availableMonsters);
+                Monster selectedMonster = selectMonster(availableMonsters).clone();
                 List<Attack> compatibleAttacks = new ArrayList<>(gameLoader.getCompatibleAttacks(selectedMonster));
                 
                 if (compatibleAttacks.isEmpty()) {
@@ -125,7 +125,7 @@ public class Game {
             System.out.println("\nCréation aléatoire de l'équipe de " + name);
             for (int i = 0; i < 3 && !availableMonsters.isEmpty(); i++) {
                 int monsterIndex = random.nextInt(availableMonsters.size());
-                Monster monster = availableMonsters.get(monsterIndex);
+                Monster monster = availableMonsters.get(monsterIndex).clone();
                 List<Attack> compatibleAttacks = new ArrayList<>(gameLoader.getCompatibleAttacks(monster));
 
                 if (compatibleAttacks.isEmpty()) {
@@ -162,6 +162,7 @@ public class Game {
         
         for (int i = 0; i < 3 && !availableItems.isEmpty(); i++) {
             displayItemList(availableItems);
+
             System.out.print("Votre choix (1-" + availableItems.size() + ", 0 pour terminer): ");
             
             int choice = getIntInput(0, availableItems.size());
@@ -190,7 +191,7 @@ public class Game {
     private void displayItemList(List<Item> items) {
         System.out.println("\nObjets disponibles:");
         for (int i = 0; i < items.size(); i++) {
-            System.out.printf("%d. %s%n", i + 1, items.get(i).getName());
+            System.out.printf("%d. %s %s%n", i + 1, items.get(i).getName(), items.get(i).getDescription());
         }
     }
 

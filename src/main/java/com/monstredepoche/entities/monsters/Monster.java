@@ -1,14 +1,13 @@
 package com.monstredepoche.entities.monsters;
 
-import com.monstredepoche.entities.Attack;
-import com.monstredepoche.entities.MonsterType;
+import com.monstredepoche.entities.attacks.Attack;
 import com.monstredepoche.entities.StatusEffect;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Monster {
+public abstract class Monster implements Cloneable {
     private final String name;
     private final MonsterType type;
     private final int maxHp;
@@ -170,54 +169,21 @@ public abstract class Monster {
             return calculateBasicDamage(target);
         }
 
-        double effectiveness = type.getEffectivenessAgainst(target.getType());
+        double effectiveness = attack.getEffectivenessAgainst(this.getType(), target.getType());
         double coef = 0.85 + random.nextDouble() * 0.15;
         
-        // Formule des consignes
-        double baseDamage = (11.0 * attack.getPower()) / (25.0 * target.getDefense());
+        double baseDamage = (11.0 * attack.getPower() * this.attack) / (25.0 * target.getDefense());
         double damage = (baseDamage + 2) * effectiveness * coef;
-        
-        if (type == attack.getType()) {
-            damage *= 1.5; // STAB (Same Type Attack Bonus)
-        }
         
         return (int)damage;
     }
 
-    public static double calculateAdvantage(MonsterType attackerType, MonsterType defenderType) {
-        if (attackerType == defenderType) return 1.0;
-
-        return switch (attackerType) {
-            case THUNDER -> switch (defenderType) {
-                case WATER -> 2.0;
-                case EARTH -> 0.5;
-                default -> 1.0;
-            };
-            case WATER -> switch (defenderType) {
-                case FIRE -> 2.0;
-                case PLANT -> 0.5;
-                default -> 1.0;
-            };
-            case EARTH -> switch (defenderType) {
-                case THUNDER -> 2.0;
-                case WATER -> 0.5;
-                default -> 1.0;
-            };
-            case FIRE -> switch (defenderType) {
-                case PLANT, INSECT -> 2.0;
-                case WATER -> 0.5;
-                default -> 1.0;
-            };
-            case PLANT -> switch (defenderType) {
-                case WATER, EARTH -> 2.0;
-                case FIRE, INSECT -> 0.5;
-                default -> 1.0;
-            };
-            case INSECT -> switch (defenderType) {
-                case PLANT -> 2.0;
-                case FIRE -> 0.5;
-                default -> 1.0;
-            };
-        };
+    @Override
+    public Monster clone() {
+        try {
+            return (Monster) super.clone();
+        } catch (CloneNotSupportedException e) {
+            return null;
+        }
     }
-} 
+}

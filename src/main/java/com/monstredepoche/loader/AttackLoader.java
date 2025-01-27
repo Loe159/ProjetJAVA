@@ -1,7 +1,8 @@
 package com.monstredepoche.loader;
 
-import com.monstredepoche.entities.Attack;
-import com.monstredepoche.entities.MonsterType;
+import com.monstredepoche.entities.attacks.Attack;
+import com.monstredepoche.entities.attacks.AttackType;
+import com.monstredepoche.entities.monsters.MonsterType;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class AttackLoader {
 
     private Attack parseAttackData(String data) throws Exception {
         String name = null;
-        MonsterType type = null;
+        AttackType type = null;
         int power = 0, nbUse = 0;
         double fail = 0.0;
 
@@ -61,7 +62,7 @@ public class AttackLoader {
             if (line.startsWith("Name")) {
                 name = line.substring(5).trim();
             } else if (line.startsWith("Type")) {
-                type = MonsterType.valueOf(line.substring(5).trim().toUpperCase());
+                type = AttackType.valueOf(line.substring(5).trim().toUpperCase());
             } else if (line.startsWith("Power")) {
                 power = Integer.parseInt(line.substring(6).trim());
             } else if (line.startsWith("NbUse")) {

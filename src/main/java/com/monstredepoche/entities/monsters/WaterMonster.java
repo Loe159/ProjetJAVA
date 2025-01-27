@@ -1,7 +1,5 @@
 package com.monstredepoche.entities.monsters;
 
-import com.monstredepoche.entities.MonsterType;
-
 public class WaterMonster extends Monster {
     private static final double FLOOD_CHANCE = 0.3;
 

@@ -41,8 +41,12 @@ public class Item {
         }
     }
 
+    public String getDescription() {
+        return String.format(this.type.getDescription() + " - %d restants.", this.value, this.quantity);
+    }
+
     @Override
     public String toString() {
-        return String.format(" (0) - : 0", name, quantity, type.getDescription(), value);
+        return String.format(" (0) - : 0", name, quantity, this.getDescription());
     }
 }

@@ -1,6 +1,6 @@
 package com.monstredepoche.loader;
 
-import com.monstredepoche.entities.Attack;
+import com.monstredepoche.entities.attacks.Attack;
 import com.monstredepoche.entities.Item;
 import com.monstredepoche.entities.monsters.Monster;
 
@@ -81,7 +81,7 @@ public class GameLoader {
     public List<Attack> getCompatibleAttacks(Monster monster) {
         List<Attack> compatibleAttacks = new ArrayList<>();
         for (Attack attack : availableAttacks) {
-            if (attack.getType() == monster.getType()) {
+            if (attack.getType().name() == monster.getType().name()) {
                 compatibleAttacks.add(attack);
             }
         }

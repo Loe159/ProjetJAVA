@@ -1,14 +1,24 @@
 package com.monstredepoche.battle;
 
-import com.monstredepoche.entities.Attack;
+import com.monstredepoche.entities.attacks.Attack;
 import com.monstredepoche.entities.Item;
 import com.monstredepoche.entities.Player;
+import com.monstredepoche.entities.StatusEffect;
 import com.monstredepoche.entities.monsters.Monster;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class Battle {
+    // Codes couleur ANSI
+    private static final String RESET = "\u001B[0m";
+    private static final String RED = "\u001B[31m";
+    private static final String GREEN = "\u001B[32m";
+    private static final String YELLOW = "\u001B[33m";
+    private static final String BLUE = "\u001B[34m";
+    private static final String PURPLE = "\u001B[35m";
+    private static final String CYAN = "\u001B[36m";
+
     private final Player player1;
     private final Player player2;
     private final Scanner scanner;
@@ -20,7 +30,7 @@ public class Battle {
     }
 
     public void start() {
-        System.out.println("\n=== Début du combat ===\n");
+        displayBanner();
         
         while (!isOver()) {
             displayStatus();
@@ -30,19 +40,74 @@ public class Battle {
         announceWinner();
     }
 
+    private void displayBanner() {
+        System.out.println(YELLOW + """
+        ╔══════════════════════════════════════╗
+        ║            Début du combat           ║
+        ╚══════════════════════════════════════╝""" + RESET);
+    }
+
+    private void displayStatus() {
+        System.out.println(BLUE + "\n╔═══════════════ ÉTAT DU COMBAT ═══════════════╗" + RESET);
+        displayMonsterStatus(player1);
+        System.out.println(BLUE + "║                   VS                        ║" + RESET);
+        displayMonsterStatus(player2);
+        System.out.println(BLUE + "╚══════════════════════════════════════════════╝\n" + RESET);
+    }
+
+    private void displayMonsterStatus(Player player) {
+        Monster monster = player.getActiveMonster();
+        String healthBar = createHealthBar(monster.getCurrentHp(), monster.getMaxHp());
+        System.out.printf(BLUE + "║" + RESET + " %-15s - %-15s %s %s " + BLUE + "║\n" + RESET,
+            player.getName(),
+            monster.getName(),
+            healthBar,
+            formatStatus(monster.getStatus()));
+    }
+
+    private String createHealthBar(int current, int max) {
+        int barLength = 20;
+        int filledLength = (int)((double)current / max * barLength);
+        StringBuilder bar = new StringBuilder("[");
+        
+        for (int i = 0; i < barLength; i++) {
+            if (i < filledLength) {
+                bar.append(GREEN + "█" + RESET);
+            } else {
+                bar.append(RED + "░" + RESET);
+            }
+        }
+        bar.append(String.format("] %d/%d", current, max));
+        return bar.toString();
+    }
+
+    private String formatStatus(StatusEffect status) {
+        return switch (status) {
+            case NORMAL -> "";
+            case PARALYZED -> YELLOW + "(PAR)" + RESET;
+            case BURNED -> RED + "(BRU)" + RESET;
+            case POISONED -> PURPLE + "(PSN)" + RESET;
+        };
+    }
+
+    private void displayMenu(String playerName) {
+        System.out.println(CYAN + String.format("""
+        ╔═══════════ TOUR DE %s ═══════════╗
+        ║ 1. Attaquer                           ║
+        ║ 2. Utiliser un objet                  ║
+        ║ 3. Changer de monstre                 ║
+        ╚══════════════════════════════════════╝""", playerName) + RESET);
+    }
+
     private void executeTurn() {
         Player[] players = {player1, player2};
-        Monster[] activeMonsters = {player1.getActiveMonster(), player2.getActiveMonster()};
         Attack[] selectedAttacks = new Attack[2];
         boolean[] usedItems = new boolean[2];
         int[] switchChoices = new int[2];
 
         // Phase de sélection
         for (int i = 0; i < 2; i++) {
-            System.out.println("\nTour de " + players[i].getName());
-            System.out.println("1. Attaquer");
-            System.out.println("2. Utiliser un objet");
-            System.out.println("3. Changer de monstre");
+            displayMenu(players[i].getName());
             System.out.print("Votre choix (1-3): ");
 
             int choice = getIntInput(1, 3);
@@ -108,8 +173,10 @@ public class Battle {
 
         System.out.println("\nObjets disponibles :");
         for (int i = 0; i < items.size(); i++) {
-            System.out.printf("%d. %s\n", i + 1, items.get(i).getName());
+            System.out.printf("%d. %s (%s)%n", i + 1, items.get(i).getName(), items.get(i).getDescription());
         }
+
+
 
         System.out.print("Votre choix (1-" + items.size() + ", 0 pour annuler): ");
         int choice = getIntInput(0, items.size());
@@ -168,14 +235,14 @@ public class Battle {
 
     private void executeAttack(Monster attacker, Monster defender, Attack attack) {
         if (attack.getRemainingUses() <= 0) {
-            System.out.println(attacker.getName() + " ne peut plus utiliser " + attack.getName() + " !");
+            System.out.println(RED + attacker.getName() + " ne peut plus utiliser " + attack.getName() + " !" + RESET);
             return;
         }
 
-        System.out.println("\n" + attacker.getName() + " utilise " + attack.getName() + " !");
+        System.out.println(YELLOW + "\n" + attacker.getName() + " utilise " + attack.getName() + " !" + RESET);
         
         if (Math.random() < attack.getFailRate()) {
-            System.out.println("L'attaque a échoué !");
+            System.out.println(RED + "L'attaque a échoué !" + RESET);
             return;
         }
 
@@ -183,22 +250,25 @@ public class Battle {
         defender.takeDamage(damage);
         attack.use();
 
-        System.out.printf("%s inflige %d dégâts à %s !%n", attacker.getName(), damage, defender.getName());
-        System.out.printf("Il reste %d/%d PV à %s%n", defender.getCurrentHp(), defender.getMaxHp(), defender.getName());
+        System.out.printf(PURPLE + "%s inflige %d dégâts à %s !%n" + RESET, 
+            attacker.getName(), damage, defender.getName());
+        System.out.printf(GREEN + "Il reste %d/%d PV à %s%n" + RESET, 
+            defender.getCurrentHp(), defender.getMaxHp(), defender.getName());
 
         if (defender.isDead()) {
-            System.out.println(defender.getName() + " est K.O. !");
+            System.out.println(RED + defender.getName() + " est K.O. !" + RESET);
         }
     }
 
     private void handleDeadMonster(Player player) {
         if (player.getActiveMonster().isDead() && !player.hasLost()) {
+            player.removeMonster(player.getActiveMonster());
             System.out.println("\n" + player.getName() + ", votre monstre est K.O. !");
             System.out.println("Choisissez un nouveau monstre :");
             
-            List<Monster> aliveMonsters = player.getAliveMonsters();
-            for (int i = 0; i < aliveMonsters.size(); i++) {
-                Monster monster = aliveMonsters.get(i);
+            List<Monster> monsters = player.getMonsters();
+            for (int i = 0; i < monsters.size(); i++) {
+                Monster monster = monsters.get(i);
                 System.out.printf("%d. %s (PV: %d/%d)%n",
                     i + 1,
                     monster.getName(),
@@ -206,29 +276,12 @@ public class Battle {
                     monster.getMaxHp());
             }
 
-            System.out.print("Votre choix (1-" + aliveMonsters.size() + "): ");
-            int choice = getIntInput(1, aliveMonsters.size()) - 1;
-            Monster selected = aliveMonsters.get(choice);
+            System.out.print("Votre choix (1-" + monsters.size() + "): ");
+            int choice = getIntInput(1, monsters.size()) - 1;
+            Monster selected = monsters.get(choice);
             player.switchMonster(choice);
             System.out.println(selected.getName() + ", à toi !");
         }
-    }
-
-    private void displayStatus() {
-        System.out.println("\n=== État du combat ===");
-        displayMonsterStatus(player1);
-        displayMonsterStatus(player2);
-        System.out.println("====================\n");
-    }
-
-    private void displayMonsterStatus(Player player) {
-        Monster monster = player.getActiveMonster();
-        System.out.printf("%s - %s: %d/%d PV (Status: %s)%n",
-            player.getName(),
-            monster.getName(),
-            monster.getCurrentHp(),
-            monster.getMaxHp(),
-            monster.getStatus());
     }
 
     private boolean isOver() {
@@ -237,7 +290,12 @@ public class Battle {
 
     private void announceWinner() {
         Player winner = player1.hasLost() ? player2 : player1;
-        System.out.println("\n" + winner.getName() + " remporte le combat !");
+        String banner = String.format(YELLOW + """
+        ╔══════════════════════════════════════╗
+        ║             VICTOIRE DE              ║
+        ║           %15s           ║
+        ╚══════════════════════════════════════╝""" + RESET, winner.getName());
+        System.out.println(banner);
     }
 
     private int getIntInput(int min, int max) {

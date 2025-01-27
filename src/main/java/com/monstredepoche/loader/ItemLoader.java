@@ -22,22 +22,25 @@ public class ItemLoader {
 
         try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
             String line;
+            StringBuilder itemData = new StringBuilder();
+
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
                 if (line.isEmpty()) continue;
 
-                String[] parts = line.split(":");
-                if (parts.length == 4) {
-                    try {
-                        String name = parts[0].trim();
-                        ItemType type = ItemType.valueOf(parts[1].trim());
-                        int value = Integer.parseInt(parts[2].trim());
-                        int quantity = Integer.parseInt(parts[3].trim());
+                itemData.append(line).append("\n");
 
-                        items.add(new Item(name, type, value, quantity));
+                if (line.equals("EndItem")) {
+                    try {
+                        Item item = parseItemData(itemData.toString());
+                        if (item != null) {
+                            items.add(item);
+                            System.out.println("Item chargé: " + item.getName());
+                        }
                     } catch (Exception e) {
                         System.err.println("Erreur lors du parsing d'un objet: " + e.getMessage());
                     }
+                    itemData = new StringBuilder();
                 }
             }
         } catch (IOException e) {
@@ -45,5 +48,31 @@ public class ItemLoader {
         }
 
         return items;
+    }
+
+    private Item parseItemData(String data) throws Exception {
+        String name = null;
+        ItemType type = null;
+        int value = 0, quantity = 0;
+        double fail = 0.0;
+
+        for (String line : data.split("\n")) {
+            line = line.trim();
+            if (line.startsWith("Name")) {
+                name = line.substring(5).trim();
+            } else if (line.startsWith("Type")) {
+                type = ItemType.valueOf(line.substring(5).trim().toUpperCase());
+            } else if (line.startsWith("Value")) {
+                value = Integer.parseInt(line.substring(6).trim());
+            } else if (line.startsWith("Quantity")) {
+                quantity = Integer.parseInt(line.substring(9).trim());
+            }
+        }
+
+        if (name == null || type == null) {
+            throw new Exception("Données d'item incomplètes");
+        }
+
+        return new Item(name, type, value, quantity);
     }
 }

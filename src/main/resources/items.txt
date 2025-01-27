@@ -1,16 +1,55 @@
-# Format: Name:Type:Value:InitialQuantity
-# Types: POTION, BOOST_ATTACK, BOOST_DEFENSE, BOOST_SPEED, ANTIDOTE, ANTI_BURN
-# Value: Nombre de points restaurés/augmentés
+Item
+Name: Potion
+Type: POTION
+Value: 50
+Quantity: 3
+EndItem
 
-Potion:POTION:50:3
-Super Potion:POTION:100:2
-Hyper Potion:POTION:200:1
+Item
+Name: Super Potion
+Type: POTION
+Value: 100
+Quantity: 2
+EndItem
 
-Protéine:BOOST_ATTACK:10:2
-Fer:BOOST_DEFENSE:10:2
-Carbone:BOOST_SPEED:10:2
+Item
+Name: Hyper Potion
+Type: POTION
+Value: 200
+Quantity: 1
+EndItem
 
-Antidote:ANTIDOTE:0:2
-Anti-Brûle:ANTI_BURN:0:2
+Item
+Name: Protéine
+Type: BOOST_ATTACK
+Value: 10
+Quantity: 2
+EndItem
 
-EndItems 
+Item
+Name: Fer
+Type: BOOST_DEFENSE
+Value: 10
+Quantity: 2
+EndItem
+
+Item
+Name: Carbone
+Type: BOOST_SPEED
+Value: 10
+Quantity: 2
+EndItem
+
+Item
+Name: Antidote
+Type: ANTIDOTE
+Value: 0
+Quantity: 2
+EndItem
+
+Item
+Name: Anti-Brûle
+Type: ANTI_BURN
+Value: 0
+Quantity: 2
+EndItem

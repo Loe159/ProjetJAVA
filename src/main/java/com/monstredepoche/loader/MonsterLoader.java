@@ -1,6 +1,6 @@
 package com.monstredepoche.loader;
 
-import com.monstredepoche.entities.MonsterType;
+import com.monstredepoche.entities.monsters.MonsterType;
 import com.monstredepoche.entities.monsters.*;
 
 import java.io.BufferedReader;

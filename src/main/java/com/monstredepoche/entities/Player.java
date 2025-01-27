@@ -24,6 +24,11 @@ public class Player {
         }
     }
 
+    public void removeMonster(Monster monster) {
+        monsters.remove(monster);
+    }
+
+
     public void addItem(Item item) {
         if (items.size() < 5) {  // Maximum 5 objets par joueur selon les consignes
             items.add(item);
@@ -89,14 +94,8 @@ public class Player {
         }
     }
 
-    public List<Monster> getAliveMonsters() {
-        return monsters.stream()
-                .filter(monster -> !monster.isDead())
-                .collect(java.util.stream.Collectors.toList());
-    }
-
     public boolean hasLost() {
-        return getAliveMonsters().isEmpty();
+        return getMonsters().isEmpty();
     }
 
     public String getName() {

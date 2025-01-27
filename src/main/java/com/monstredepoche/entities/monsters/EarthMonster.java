@@ -1,7 +1,5 @@
 package com.monstredepoche.entities.monsters;
 
-import com.monstredepoche.entities.MonsterType;
-
 public class EarthMonster extends Monster {
     private static final double UNDERGROUND_CHANCE = 0.3;
     private boolean isUnderground;

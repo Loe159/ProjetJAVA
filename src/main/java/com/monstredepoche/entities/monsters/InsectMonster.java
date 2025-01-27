@@ -1,6 +1,5 @@
 package com.monstredepoche.entities.monsters;
 
-import com.monstredepoche.entities.MonsterType;
 import com.monstredepoche.entities.StatusEffect;
 
 public class InsectMonster extends Monster {
