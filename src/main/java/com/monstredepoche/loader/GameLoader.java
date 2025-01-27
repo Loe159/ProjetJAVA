@@ -1,21 +1,25 @@
 package com.monstredepoche.loader;
 
 import com.monstredepoche.entities.attacks.Attack;
-import com.monstredepoche.entities.Item;
+import com.monstredepoche.entities.item.Item;
 import com.monstredepoche.entities.monsters.Monster;
+import com.monstredepoche.entities.monsters.MonsterType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameLoader {
+    private final MonsterLoader monsterLoader;
+    private final AttackLoader attackLoader;
+    private final ItemLoader itemLoader;
     private List<Monster> availableMonsters;
     private List<Attack> availableAttacks;
     private List<Item> availableItems;
 
     public GameLoader() {
-        availableMonsters = new ArrayList<>();
-        availableAttacks = new ArrayList<>();
-        availableItems = new ArrayList<>();
+        this.monsterLoader = new MonsterLoader();
+        this.attackLoader = new AttackLoader();
+        this.itemLoader = new ItemLoader();
         loadGameData();
     }
 
@@ -27,17 +31,14 @@ public class GameLoader {
 
         try {
             // Chargement des monstres
-            MonsterLoader monsterLoader = new MonsterLoader();
             availableMonsters = monsterLoader.loadMonsters();
             System.out.println(availableMonsters.size() + " monstres chargés.");
 
             // Chargement des attaques
-            AttackLoader attackLoader = new AttackLoader();
             availableAttacks = attackLoader.loadAttacks();
             System.out.println(availableAttacks.size() + " attaques chargées.");
 
             // Chargement des objets
-            ItemLoader itemLoader = new ItemLoader();
             availableItems = itemLoader.loadItems();
             System.out.println(availableItems.size() + " objets chargés.");
 
@@ -79,17 +80,9 @@ public class GameLoader {
      * @return Liste d'attaques compatibles
      */
     public List<Attack> getCompatibleAttacks(Monster monster) {
-        List<Attack> compatibleAttacks = new ArrayList<>();
-        for (Attack attack : availableAttacks) {
-            if (attack.getType().name() == monster.getType().name()) {
-                compatibleAttacks.add(attack);
-            }
-        }
-
-        if (compatibleAttacks.isEmpty()) {
-            System.err.println("ATTENTION: Aucune attaque compatible trouvée pour " + monster.getName());
-        }
-        return compatibleAttacks;
+        return availableAttacks.stream()
+                .filter(attack -> attack.getType().toString().equals(monster.getType().toString()))
+                .toList();
     }
 
     /**

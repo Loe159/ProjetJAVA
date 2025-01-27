@@ -1,7 +1,8 @@
 package com.monstredepoche.loader;
 
-import com.monstredepoche.entities.Item;
 import com.monstredepoche.entities.ItemType;
+import com.monstredepoche.entities.item.Item;
+import com.monstredepoche.entities.item.ItemFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,7 +55,6 @@ public class ItemLoader {
         String name = null;
         ItemType type = null;
         int value = 0, quantity = 0;
-        double fail = 0.0;
 
         for (String line : data.split("\n")) {
             line = line.trim();
@@ -73,6 +73,6 @@ public class ItemLoader {
             throw new Exception("Données d'item incomplètes");
         }
 
-        return new Item(name, type, value, quantity);
+        return ItemFactory.createItem(name, type, value, quantity);
     }
 }

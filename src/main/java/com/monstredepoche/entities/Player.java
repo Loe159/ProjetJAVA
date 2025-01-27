@@ -1,6 +1,7 @@
 package com.monstredepoche.entities;
 
 import com.monstredepoche.entities.monsters.Monster;
+import com.monstredepoche.entities.item.Item;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,48 +45,8 @@ public class Player {
             return false;
         }
 
-        boolean used = false;
-        switch (item.getType()) {
-            case POTION -> {
-                if (target.getCurrentHp() < target.getMaxHp()) {
-                    target.heal(item.getValue());
-                    used = true;
-                }
-            }
-            case BOOST_ATTACK -> {
-                target.boostAttack(item.getValue());
-                used = true;
-            }
-            case BOOST_DEFENSE -> {
-                target.boostDefense(item.getValue());
-                used = true;
-            }
-            case BOOST_SPEED -> {
-                target.boostSpeed(item.getValue());
-                used = true;
-            }
-            case ANTIDOTE -> {
-                if (target.getStatus() == StatusEffect.POISONED) {
-                    target.setStatus(StatusEffect.NORMAL);
-                    used = true;
-                }
-            }
-            case ANTI_BURN -> {
-                if (target.getStatus() == StatusEffect.BURNED) {
-                    target.setStatus(StatusEffect.NORMAL);
-                    used = true;
-                }
-            }
-        }
-
-        if (used) {
-            item.use();
-            if (item.getQuantity() <= 0) {
-                items.remove(item);
-            }
-        }
-
-        return used;
+        item.use(target);
+        return true;
     }
 
     public void switchMonster(int index) {

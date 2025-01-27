@@ -1,7 +1,7 @@
 package com.monstredepoche.battle;
 
 import com.monstredepoche.entities.attacks.Attack;
-import com.monstredepoche.entities.Item;
+import com.monstredepoche.entities.item.Item;
 import com.monstredepoche.entities.Player;
 import com.monstredepoche.entities.StatusEffect;
 import com.monstredepoche.entities.monsters.Monster;
@@ -196,8 +196,6 @@ public class Battle {
         for (int i = 0; i < items.size(); i++) {
             System.out.printf("%d. %s (%s)%n", i + 1, items.get(i).getName(), items.get(i).getDescription());
         }
-
-
 
         System.out.print("Votre choix (1-" + items.size() + ", 0 pour annuler): ");
         int choice = getIntInput(0, items.size());
