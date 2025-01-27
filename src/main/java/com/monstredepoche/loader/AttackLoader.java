@@ -1,6 +1,7 @@
 package com.monstredepoche.loader;
 
 import com.monstredepoche.entities.attacks.Attack;
+import com.monstredepoche.entities.attacks.AttackFactory;
 import com.monstredepoche.entities.attacks.AttackType;
 import com.monstredepoche.entities.monsters.MonsterType;
 
@@ -76,6 +77,6 @@ public class AttackLoader {
             throw new Exception("Données d'attaque incomplètes");
         }
 
-        return new Attack(name, type, power, nbUse, fail);
+        return AttackFactory.createAttack(name, type, power, nbUse, fail);
     }
 }
