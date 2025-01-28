@@ -83,43 +83,27 @@ public class Game {
             }
 
             for (int i = 0; i < 3 && !availableMonsters.isEmpty(); i++) {
-                boolean monsterSelected = false;
-                while (!monsterSelected) {
-                    System.out.println("\nChoisissez le monstre " + (i + 1) + ":");
-                    displayMonsterList(availableMonsters);
-                    
-                    Monster selectedMonster = selectMonster(availableMonsters);
-                    if (selectedMonster == null) {
-                        continue;
-                    }
-                    
-                    selectedMonster = selectedMonster.clone();
-                    List<Attack> compatibleAttacks = new ArrayList<>(gameLoader.getCompatibleAttacks(selectedMonster));
-                    
-                    if (compatibleAttacks.isEmpty()) {
-                        throw new RuntimeException("Aucune attaque compatible pour " + selectedMonster.getName());
-                    }
+                System.out.println("\nChoisissez le monstre " + (i + 1) + ":");
+                displayMonsterList(availableMonsters);
 
-                    System.out.println("\nChoisissez 4 attaques pour " + selectedMonster.getName() + ":");
-                    int attackCount = 0;
-                    while (attackCount < 4 && !compatibleAttacks.isEmpty()) {
-                        displayAttackList(compatibleAttacks);
-                        Attack selectedAttack = selectAttack(compatibleAttacks);
-                        if (selectedAttack == null) {
-                            continue;
-                        }
-                        selectedMonster.addAttack(selectedAttack);
-                        compatibleAttacks.remove(selectedAttack);
-                        attackCount++;
-                    }
-                    
-                    if (attackCount == 4) {
-                        player.addMonster(selectedMonster);
-                        availableMonsters.remove(selectedMonster);
-                        System.out.println(selectedMonster.getName() + " ajouté à l'équipe de " + name);
-                        monsterSelected = true;
-                    }
+                Monster selectedMonster = selectMonster(availableMonsters).clone();
+                List<Attack> compatibleAttacks = new ArrayList<>(gameLoader.getCompatibleAttacks(selectedMonster));
+
+                if (compatibleAttacks.isEmpty()) {
+                    throw new RuntimeException("Aucune attaque compatible pour " + selectedMonster.getName());
                 }
+
+                System.out.println("\nChoisissez 4 attaques pour " + selectedMonster.getName() + ":");
+                for (int j = 0; j < 4 && !compatibleAttacks.isEmpty(); j++) {
+                    displayAttackList(compatibleAttacks);
+                    Attack selectedAttack = selectAttack(compatibleAttacks);
+                    selectedMonster.addAttack(selectedAttack);
+                    compatibleAttacks.remove(selectedAttack);
+                }
+
+                player.addMonster(selectedMonster);
+                availableMonsters.remove(selectedMonster);
+                System.out.println(selectedMonster.getName() + " ajouté à l'équipe de " + name);
             }
 
             return player;
@@ -177,7 +161,8 @@ public class Game {
         System.out.println("Vous pouvez choisir jusqu'à 5 objets.");
 
         List<Item> availableItems = new ArrayList<>(gameLoader.getAvailableItems());
-        
+
+
         for (int i = 0; i < 5 && !availableItems.isEmpty(); i++) {
             displayItemList(availableItems);
 
@@ -241,7 +226,7 @@ public class Game {
 
     private Monster selectMonster(List<Monster> monsters) {
         while (true) {
-            System.out.print("Votre choix (1-" + monsters.size() + ", 0 pour annuler): ");
+            System.out.print("Votre choix (1-" + monsters.size() + "): ");
             int choice = getIntInput(0, monsters.size());
             if (choice == 0) {
                 return null;
