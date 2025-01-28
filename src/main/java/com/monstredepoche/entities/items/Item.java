@@ -1,4 +1,4 @@
-package com.monstredepoche.entities.item;
+package com.monstredepoche.entities.items;
 
 import com.monstredepoche.entities.monsters.Monster;
 

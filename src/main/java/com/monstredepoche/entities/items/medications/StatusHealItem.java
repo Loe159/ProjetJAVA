@@ -1,6 +1,8 @@
-package com.monstredepoche.entities.item;
+package com.monstredepoche.entities.items.medications;
 
 import com.monstredepoche.entities.StatusEffect;
+import com.monstredepoche.entities.items.Item;
+import com.monstredepoche.entities.items.ItemType;
 import com.monstredepoche.entities.monsters.Monster;
 
 public class StatusHealItem extends Item {

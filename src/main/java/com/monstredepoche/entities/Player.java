@@ -1,6 +1,6 @@
 package com.monstredepoche.entities;
 
-import com.monstredepoche.entities.item.Item;
+import com.monstredepoche.entities.items.Item;
 import com.monstredepoche.entities.monsters.Monster;
 import java.util.ArrayList;
 import java.util.List;

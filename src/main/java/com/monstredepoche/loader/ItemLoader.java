@@ -1,16 +1,7 @@
 package com.monstredepoche.loader;
 
-import com.monstredepoche.entities.item.*;
-import com.monstredepoche.entities.item.ItemType;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import com.monstredepoche.entities.items.*;
+import com.monstredepoche.entities.items.ItemType;
 
 public class ItemLoader extends AbstractLoader<Item> {
     private static final String ITEMS_FILE = "src/main/resources/items.txt";

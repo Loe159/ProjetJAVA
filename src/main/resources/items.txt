@@ -1,41 +1,41 @@
 Item
 Name: Potion
-Type: POTION
+Type: HEALING
 Value: 50
 Quantity: 3
 EndItem
 
 Item
 Name: Super Potion
-Type: POTION
+Type: HEALING
 Value: 100
 Quantity: 2
 EndItem
 
 Item
 Name: Hyper Potion
-Type: POTION
+Type: HEALING
 Value: 200
 Quantity: 1
 EndItem
 
 Item
 Name: Protéine
-Type: BOOST_ATTACK
+Type: ATTACK_BOOST
 Value: 10
 Quantity: 2
 EndItem
 
 Item
 Name: Fer
-Type: BOOST_DEFENSE
+Type: DEFENSE_BOOST
 Value: 10
 Quantity: 2
 EndItem
 
 Item
 Name: Carbone
-Type: BOOST_SPEED
+Type: SPEED_BOOST
 Value: 10
 Quantity: 2
 EndItem

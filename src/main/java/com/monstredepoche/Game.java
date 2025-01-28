@@ -1,7 +1,7 @@
 package com.monstredepoche;
 
 import com.monstredepoche.entities.attacks.Attack;
-import com.monstredepoche.entities.item.Item;
+import com.monstredepoche.entities.items.Item;
 import com.monstredepoche.entities.Player;
 import com.monstredepoche.entities.monsters.Monster;
 import com.monstredepoche.battle.Battle;

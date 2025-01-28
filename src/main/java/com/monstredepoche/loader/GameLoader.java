@@ -1,9 +1,8 @@
 package com.monstredepoche.loader;
 
 import com.monstredepoche.entities.attacks.Attack;
-import com.monstredepoche.entities.item.Item;
+import com.monstredepoche.entities.items.Item;
 import com.monstredepoche.entities.monsters.Monster;
-import com.monstredepoche.entities.monsters.MonsterType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +57,7 @@ public class GameLoader {
             availableItems = itemLoader.loadEntities();
             System.out.println("\nObjets chargés: " + availableItems.size());
             for (Item item : availableItems) {
-                System.out.println(item.getName() + " - " + item.getType());
+                System.out.println(item.getName() + " - " + item.getDescription());
             }
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement des objets: " + e.getMessage());

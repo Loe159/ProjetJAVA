@@ -1,12 +1,14 @@
-package com.monstredepoche.entities.item;
+package com.monstredepoche.entities.items.potions.boosts;
 
+import com.monstredepoche.entities.items.ItemType;
+import com.monstredepoche.entities.items.potions.Potion;
 import com.monstredepoche.entities.monsters.Monster;
 
-public abstract class StatBoostItem extends Item {
+public abstract class BoostPotion extends Potion {
     private final int boostAmount;
 
-    protected StatBoostItem(String name, ItemType type, int boostAmount) {
-        super(name, type);
+    protected BoostPotion(String name, ItemType type, int boostAmount) {
+        super(name, type, boostAmount);
         this.boostAmount = boostAmount;
     }
 
