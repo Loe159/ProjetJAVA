@@ -48,18 +48,19 @@ public class Battle {
     }
 
     private void displayStatus() {
-        System.out.println(BLUE + "\n╔═══════════════ ÉTAT DU COMBAT ═══════════════╗" + RESET);
+        System.out.println(BLUE + "\n╔═══════════════ ÉTAT DU COMBAT ══════════════════════════════════════╗" + RESET);
         displayMonsterStatus(player1);
-        System.out.println(BLUE + "║                   VS                        ║" + RESET);
+        System.out.println(BLUE + "║                   VS                                                ║" + RESET);
         displayMonsterStatus(player2);
-        System.out.println(BLUE + "╚══════════════════════════════════════════════╝\n" + RESET);
+        System.out.println(BLUE + "╚═════════════════════════════════════════════════════════════════════╝\n" + RESET);
     }
 
     private void displayMonsterStatus(Player player) {
         Monster monster = player.getActiveMonster();
         String healthBar = createHealthBar(monster.getCurrentHp(), monster.getMaxHp());
-        System.out.printf(BLUE + "║" + RESET + " %-15s - %-15s %s %s " + BLUE + "║\n" + RESET,
-            player.getName(),
+        String playerName = player == player1 ? CYAN + player.getName() + RESET : PURPLE + player.getName() + RESET;
+        System.out.printf(BLUE + "║" + RESET + " %-30s %-15s %s %s " + BLUE + "║\n" + RESET,
+            playerName,
             monster.getName(),
             healthBar,
             formatStatus(monster.getStatus()));
@@ -92,11 +93,11 @@ public class Battle {
 
     private void displayMenu(String playerName) {
         System.out.println(CYAN + String.format("""
-        ╔═══════════ TOUR DE %s ═══════════╗
+        ╔═══════════ TOUR DE %s ══════════╗
         ║ 1. Attaquer                           ║
         ║ 2. Utiliser un objet                  ║
         ║ 3. Changer de monstre                 ║
-        ╚══════════════════════════════════════╝""", playerName) + RESET);
+        ╚═══════════════════════════════════════╝""", playerName) + RESET);
     }
 
     private void executeTurn() {
@@ -110,12 +111,13 @@ public class Battle {
             boolean actionSelected = false;
             while (!actionSelected) {
                 displayMenu(players[i].getName());
-                System.out.print("Votre choix (1-3): ");
+                String playerColor = players[i] == player1 ? CYAN : PURPLE;
+                System.out.print(playerColor + "[" + players[i].getName() + "]" + RESET + " Votre choix (1-3): ");
 
                 int choice = getIntInput(1, 3);
                 switch (choice) {
                     case 1 -> {
-                        Attack attack = selectAttack(players[i].getActiveMonster());
+                        Attack attack = selectAttack(players[i]);
                         if (attack != null) {
                             selectedAttacks[i] = attack;
                             actionSelected = true;
@@ -190,7 +192,8 @@ public class Battle {
         }
 
         displayItemMenu(player);
-        System.out.print("\nChoisissez un objet à utiliser (0 pour annuler) : ");
+        String playerColor = player == player1 ? CYAN : PURPLE;
+        System.out.print("\n" + playerColor + "[" + player.getName() + "]" + RESET + " Choisissez un objet à utiliser (0 pour annuler) : ");
         int choice = getIntInput(0, items.size());
         if (choice == 0) return;
 
@@ -200,7 +203,10 @@ public class Battle {
         System.out.println(player.getName() + " utilise " + selectedItem.getName() + " sur " + target.getName());
     }
 
-    private Attack selectAttack(Monster monster) {
+    private Attack selectAttack(Player player) {
+        Monster monster = player.getActiveMonster();
+        String playerColor = player == player1 ? CYAN : PURPLE;
+
         if (monster == null) {
             System.err.println("ERREUR: Le monstre est null");
             return null;
@@ -224,7 +230,7 @@ public class Battle {
         }
 
         while (true) {
-            System.out.print("Votre choix (1-" + attacks.size() + ", 0 pour annuler): ");
+            System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Votre choix (1-" + attacks.size() + ", 0 pour annuler): ");
             int choice = getIntInput(0, attacks.size());
             if (choice == 0) {
                 return null;
@@ -273,6 +279,8 @@ public class Battle {
             System.out.println("Choisissez un nouveau monstre :");
             
             List<Monster> monsters = player.getMonsters();
+            String playerColor = player == player1 ? CYAN : PURPLE;
+
             for (int i = 0; i < monsters.size(); i++) {
                 Monster monster = monsters.get(i);
                 System.out.printf("%d. %s (PV: %d/%d)%n",
@@ -282,7 +290,7 @@ public class Battle {
                     monster.getMaxHp());
             }
 
-            System.out.print("Votre choix (1-" + monsters.size() + "): ");
+            System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Votre choix (1-" + monsters.size() + "): ");
             int choice = getIntInput(1, monsters.size()) - 1;
             Monster selected = monsters.get(choice);
             player.switchMonster(choice);
@@ -324,7 +332,8 @@ public class Battle {
             return -1;
         }
 
-        System.out.println(player.getName() + ", choisissez un nouveau monstre:");
+        String playerColor = player == player1 ? CYAN : PURPLE;
+        System.out.println(playerColor + "[" + player.getName() + "]" + RESET + " choisissez un nouveau monstre:");
         for (int i = 0; i < player.getMonsters().size(); i++) {
             Monster monster = player.getMonsters().get(i);
             System.out.printf("%d. %s (PV: %d/%d)%n", 
@@ -333,7 +342,7 @@ public class Battle {
 
         while (true) {
             try {
-                System.out.print("Votre choix (1-" + player.getMonsters().size() + ", 0 pour annuler): ");
+                System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Votre choix (1-" + player.getMonsters().size() + ", 0 pour annuler): ");
                 int choice = Integer.parseInt(scanner.nextLine());
                 if (choice == 0) {
                     return -1;
@@ -356,10 +365,11 @@ public class Battle {
 
     private void displayItemMenu(Player player) {
         List<Item> items = player.getItems();
-        System.out.println("\nObjets disponibles pour " + player.getName() + ":");
+        String playerColor = player == player1 ? CYAN : PURPLE;
+        System.out.println("\nObjets disponibles pour " + playerColor + player.getName() + RESET + ":");
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
-            System.out.printf("%d. %s (%s)%n", i + 1, item.getName(), item.getType());
+            System.out.printf("%d. %s (%s)%n", i + 1, item.getName(), item.getDescription());
         }
     }
 } 
