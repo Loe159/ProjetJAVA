@@ -20,7 +20,6 @@ public abstract class Attack {
     }
 
     public abstract double getEffectivenessAgainst(MonsterType attackerType, MonsterType defenderType);
-    public abstract void applySpecialEffect();
 
     public void use() {
         if (remainingUses > 0) {

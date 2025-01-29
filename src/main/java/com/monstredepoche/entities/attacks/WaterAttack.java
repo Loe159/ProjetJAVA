@@ -15,9 +15,4 @@ public class WaterAttack extends Attack {
             default -> 1.0;     // Efficacité normale
         };
     }
-
-    @Override
-    public void applySpecialEffect() {
-        // Les effets spéciaux sont gérés par le monstre
-    }
 } 

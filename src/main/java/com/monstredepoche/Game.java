@@ -68,7 +68,6 @@ public class Game {
             
         } catch (Exception e) {
             System.err.println("Une erreur est survenue pendant le jeu: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -225,25 +224,18 @@ public class Game {
     }
 
     private Monster selectMonster(List<Monster> monsters) {
-        while (true) {
-            System.out.print("Votre choix (1-" + monsters.size() + "): ");
-            int choice = getIntInput(0, monsters.size());
-            if (choice == 0) {
-                return null;
-            }
-            return monsters.get(choice - 1);
-        }
+        System.out.print("Votre choix (1-" + monsters.size() + "): ");
+        int choice = getIntInput(1, monsters.size());
+        return monsters.get(choice - 1);
     }
 
     private Attack selectAttack(List<Attack> attacks) {
-        while (true) {
-            System.out.print("Votre choix (1-" + attacks.size() + ", 0 pour annuler): ");
-            int choice = getIntInput(0, attacks.size());
-            if (choice == 0) {
-                return null;
-            }
-            return attacks.get(choice - 1);
+        System.out.print("Votre choix (1-" + attacks.size() + ", 0 pour annuler): ");
+        int choice = getIntInput(0, attacks.size());
+        if (choice == 0) {
+            return null;
         }
+        return attacks.get(choice - 1);
     }
 
     private int getIntInput(int min, int max) {

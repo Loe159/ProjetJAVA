@@ -1,6 +1,7 @@
 package com.monstredepoche.loader;
 
-import com.monstredepoche.entities.items.*;
+import com.monstredepoche.entities.items.Item;
+import com.monstredepoche.entities.items.ItemFactory;
 import com.monstredepoche.entities.items.ItemType;
 
 public class ItemLoader extends AbstractLoader<Item> {

@@ -159,17 +159,18 @@ public abstract class Monster implements Cloneable {
         return random;
     }
 
-    public int calculateBasicDamage(Monster target) {
+    public double calculateBasicDamage(Monster target) {
         double coef = 0.85 + random.nextDouble() * 0.15;
-        return (int)(20 * ((double)attack / target.getDefense()) * coef);
+        return (20 * ((double)attack / target.getDefense()) * coef);
     }
 
     public int calculateDamage(Attack attack, Monster target) {
+        double effectiveness = attack.getEffectivenessAgainst(this.getType(), target.getType());
+
         if (attack == null) {
-            return calculateBasicDamage(target);
+            return (int) (effectiveness * calculateBasicDamage(target));
         }
 
-        double effectiveness = attack.getEffectivenessAgainst(this.getType(), target.getType());
         double coef = 0.85 + random.nextDouble() * 0.15;
         
         double baseDamage = (11.0 * attack.getPower() * this.attack) / (25.0 * target.getDefense());

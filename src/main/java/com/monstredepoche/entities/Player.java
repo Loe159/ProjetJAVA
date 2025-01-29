@@ -44,15 +44,13 @@ public class Player {
         }
     }
 
-    public boolean switchMonster(int index) {
+    public void switchMonster(int index) {
         if (index >= 0 && index < monsters.size()) {
             Monster selectedMonster = monsters.get(index);
             if (!selectedMonster.isDead() && selectedMonster != activeMonster) {
                 activeMonster = selectedMonster;
-                return true;
             }
         }
-        return false;
     }
 
     public List<Monster> getAliveMonsters() {
