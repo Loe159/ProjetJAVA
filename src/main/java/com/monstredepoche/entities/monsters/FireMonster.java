@@ -3,7 +3,7 @@ package com.monstredepoche.entities.monsters;
 import com.monstredepoche.entities.StatusEffect;
 
 public class FireMonster extends Monster {
-    private static final double BURN_CHANCE = 0.3;
+    private static final double BURN_CHANCE = 1.0;
 
     public FireMonster(String name, int maxHp, int attack, int defense, int speed) {
         super(name, MonsterType.FIRE, maxHp, attack, defense, speed);

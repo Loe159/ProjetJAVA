@@ -213,14 +213,21 @@ public class Battle {
         }
 
         List<Attack> attacks = monster.getAttacks();
-        if (attacks.isEmpty()) {
-            System.err.println("ERREUR: " + monster.getName() + " n'a pas d'attaques");
-            return null;
+        List<Attack> availableAttacks = attacks.stream()
+            .filter(a -> a.getRemainingUses() > 0)
+            .toList();
+
+        if (availableAttacks.isEmpty()) {
+            System.out.println("\n" + RED + "Aucune attaque disponible pour " + monster.getName() + " !" + RESET);
+            System.out.println(YELLOW + "Vous pouvez attaquer à la main (dégâts de base)" + RESET);
+            System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Voulez-vous attaquer à la main ? (O/N): ");
+            String choice = scanner.nextLine().trim().toUpperCase();
+            return choice.equals("O") ? null : selectAttack(player);
         }
 
         System.out.println("\nChoisissez une attaque pour " + monster.getName() + ":");
-        for (int i = 0; i < attacks.size(); i++) {
-            Attack attack = attacks.get(i);
+        for (int i = 0; i < availableAttacks.size(); i++) {
+            Attack attack = availableAttacks.get(i);
             System.out.printf("%d. %s (Puissance: %d, Utilisations: %d/%d)%n",
                 i + 1,
                 attack.getName(),
@@ -246,6 +253,18 @@ public class Battle {
     }
 
     private void executeAttack(Monster attacker, Monster defender, Attack attack) {
+        if (attack == null) {
+            // Attaque à la main
+            int damage = (int) attacker.calculateBasicDamage(defender);
+            defender.takeDamage(damage);
+            System.out.println(YELLOW + "\n" + attacker.getName() + " attaque à la main !" + RESET);
+            System.out.printf(PURPLE + "%s inflige %d dégâts à %s !%n" + RESET, 
+                attacker.getName(), damage, defender.getName());
+            System.out.printf(GREEN + "Il reste %d/%d PV à %s%n" + RESET, 
+                defender.getCurrentHp(), defender.getMaxHp(), defender.getName());
+            return;
+        }
+
         if (attack.getRemainingUses() <= 0) {
             System.out.println(RED + attacker.getName() + " ne peut plus utiliser " + attack.getName() + " !" + RESET);
             return;
@@ -307,7 +326,7 @@ public class Battle {
         String banner = String.format(YELLOW + """
         ╔══════════════════════════════════════╗
         ║             VICTOIRE DE              ║
-        ║           %15s           ║
+        ║           %15s            ║
         ╚══════════════════════════════════════╝""" + RESET, winner.getName());
         System.out.println(banner);
     }

@@ -37,7 +37,8 @@ public enum StatusEffect {
         
         @Override
         public boolean tryRecovery(int turnsInStatus) {
-            return Math.random() < 0.3; // 30% de chance de récupérer
+                double probability = (double) turnsInStatus / 6; // probabilité = nombre de tours passé dans cet état divisé par six
+                return Math.random() < probability;
         }
 
         @Override
@@ -48,7 +49,7 @@ public enum StatusEffect {
     BURNED {
         @Override
         public void applyEffect(Monster monster) {
-            monster.takeDamage(monster.getMaxHp() / 16); // 1/16 des PV max
+            monster.takeDamage(monster.getMaxHp() / 16); // TODO Subit au début de chaque tour un dixième de son attaque
         }
         
         @Override
@@ -58,7 +59,7 @@ public enum StatusEffect {
         
         @Override
         public boolean tryRecovery(int turnsInStatus) {
-            return Math.random() < 0.2; // 20% de chance de récupérer
+            return false;
         }
 
         @Override
@@ -69,7 +70,7 @@ public enum StatusEffect {
     POISONED {
         @Override
         public void applyEffect(Monster monster) {
-            monster.takeDamage(monster.getMaxHp() / 8); // 1/8 des PV max
+            monster.takeDamage(monster.getMaxHp() / 8); // TODO Subit au début de chaque tour un dixième de son attaque
         }
         
         @Override

@@ -2,7 +2,7 @@ package com.monstredepoche.entities.monsters;
 
 import com.monstredepoche.entities.StatusEffect;
 
-public class InsectMonster extends Monster {
+public class InsectMonster extends NatureMonster {
     private static final double POISON_CHANCE = 0.3;
 
     public InsectMonster(String name, int maxHp, int attack, int defense, int speed) {
@@ -16,4 +16,5 @@ public class InsectMonster extends Monster {
             System.out.println(getName() + " empoisonne sa cible !");
         }
     }
+
 } 
