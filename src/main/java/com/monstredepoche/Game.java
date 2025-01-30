@@ -23,7 +23,6 @@ public class Game {
     }
 
     public void start() {
-        try {
             System.out.println("=== Pocket Monster ===");
             System.out.println("1. Configuration manuelle");
             System.out.println("2. Configuration aléatoire rapide");
@@ -63,10 +62,6 @@ public class Game {
 
             Battle battle = new Battle(player1, player2);
             battle.start();
-            
-        } catch (Exception e) {
-            System.err.println("Une erreur est survenue pendant le jeu: " + e.getMessage());
-        }
     }
 
     private Player createPlayer(String name) {
@@ -111,7 +106,6 @@ public class Game {
     }
 
     private Player createRandomPlayer(String name) {
-        try {
             Player player = new Player(name);
             List<Monster> availableMonsters = new ArrayList<>(gameLoader.getAvailableMonsters());
 
@@ -121,7 +115,7 @@ public class Game {
 
             System.out.println("\nCréation aléatoire de l'équipe de " + name);
             for (int i = 0; i < 3 && !availableMonsters.isEmpty(); i++) {
-                int monsterIndex = RandomUtils.getRandomInt(0, availableMonsters.size());
+                int monsterIndex = RandomUtils.getRandomInt(0, availableMonsters.size() - 1);
                 Monster monster = availableMonsters.get(monsterIndex).clone();
                 List<Attack> compatibleAttacks = new ArrayList<>(gameLoader.getCompatibleAttacks(monster));
 
@@ -131,7 +125,7 @@ public class Game {
                 }
 
                 for (int j = 0; j < 3 && !compatibleAttacks.isEmpty(); j++) {
-                    int attackIndex = RandomUtils.getRandomInt(0, compatibleAttacks.size());
+                    int attackIndex = RandomUtils.getRandomInt(0, compatibleAttacks.size() - 1);
                     Attack attack = compatibleAttacks.get(attackIndex);
                     monster.addAttack(attack);
                     compatibleAttacks.remove(attack);
@@ -147,10 +141,6 @@ public class Game {
             }
 
             return player;
-        } catch (Exception e) {
-            System.err.println("Erreur lors de la création aléatoire du joueur " + name + ": " + e.getMessage());
-            throw new RuntimeException(e);
-        }
     }
 
     private void distributeItems(Player player) {
@@ -181,7 +171,7 @@ public class Game {
         System.out.println("\nDistribution aléatoire des objets pour " + player.getName());
 
         for (int i = 0; i < 5 && !availableItems.isEmpty(); i++) {
-            int index = RandomUtils.getRandomInt(0, availableItems.size());
+            int index = RandomUtils.getRandomInt(0, availableItems.size() - 1);
             Item selectedItem = availableItems.get(index);
             player.addItem(selectedItem);
             System.out.println(selectedItem.getName() + " ajouté à l'inventaire de " + player.getName());
