@@ -14,7 +14,7 @@ public class EarthMonster extends Monster {
     }
 
     @Override
-    public void useSpecialAbility() {
+    public void useSpecialAbility(Monster defender) {
         if (!isUnderground && getRandom().nextDouble() < UNDERGROUND_CHANCE) {
             goUnderground();
         }

@@ -8,7 +8,7 @@ public class WaterMonster extends Monster {
     }
 
     @Override
-    public void useSpecialAbility() {
+    public void useSpecialAbility(Monster defender) {
         if (getRandom().nextDouble() < FLOOD_CHANCE) {
             setInFloodedTerrain(true);
             System.out.println(getName() + " inonde le terrain !");

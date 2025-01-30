@@ -110,7 +110,7 @@ public abstract class Monster implements Cloneable {
         return currentHp <= 0;
     }
 
-    public abstract void useSpecialAbility();
+    public abstract void useSpecialAbility(Monster defender);
 
     public String getName() {
         return name;

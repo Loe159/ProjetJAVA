@@ -10,9 +10,9 @@ public class ThunderMonster extends Monster {
     }
 
     @Override
-    public void useSpecialAbility() {
+    public void useSpecialAbility(Monster defender) {
         if (getRandom().nextDouble() < PARALYZE_CHANCE) {
-            setStatus(StatusEffect.PARALYZED);
+            defender.setStatus(StatusEffect.PARALYZED);
             System.out.println(getName() + " paralyse sa cible !");
         }
     }

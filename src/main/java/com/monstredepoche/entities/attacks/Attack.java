@@ -51,6 +51,10 @@ public abstract class Attack {
         return failRate;
     }
 
+    public boolean isSpecial() {
+        return this.type != AttackType.BAREHANDED && this.type != AttackType.NORMAL;
+    }
+
     @Override
     public String toString() {
         return String.format("%s (Type: %s, Puissance: %d, Utilisations: %d/%d)", 

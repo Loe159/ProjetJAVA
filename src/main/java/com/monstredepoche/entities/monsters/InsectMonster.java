@@ -10,9 +10,9 @@ public class InsectMonster extends Monster {
     }
 
     @Override
-    public void useSpecialAbility() {
+    public void useSpecialAbility(Monster defender) {
         if (getRandom().nextDouble() < POISON_CHANCE) {
-            setStatus(StatusEffect.POISONED);
+            defender.setStatus(StatusEffect.POISONED);
             System.out.println(getName() + " empoisonne sa cible !");
         }
     }

@@ -10,9 +10,9 @@ public class FireMonster extends Monster {
     }
 
     @Override
-    public void useSpecialAbility() {
+    public void useSpecialAbility(Monster defender) {
         if (getRandom().nextDouble() < BURN_CHANCE) {
-            setStatus(StatusEffect.BURNED);
+            defender.setStatus(StatusEffect.BURNED);
             System.out.println(getName() + " inflige une brûlure !");
         }
     }

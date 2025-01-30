@@ -288,6 +288,11 @@ public class Battle {
         System.out.printf(GREEN + "Il reste %d/%d PV à %s%n" + RESET, 
             defender.getCurrentHp(), defender.getMaxHp(), defender.getName());
 
+        // Activation de la capacité spéciale après une attaque réussie
+        if (attack.isSpecial()) {
+            attacker.useSpecialAbility(defender);
+        }
+
         if (defender.isDead()) {
             System.out.println(RED + defender.getName() + " est K.O. !" + RESET);
         }
