@@ -1,6 +1,7 @@
 package com.monstredepoche.entities;
 
 import com.monstredepoche.entities.monsters.Monster;
+import com.monstredepoche.utils.RandomUtils;
 
 public enum StatusEffect {
     NORMAL {
@@ -32,12 +33,12 @@ public enum StatusEffect {
         
         @Override
         public boolean canAttack() {
-            return Math.random() > 0.25; // 25% de chance de ne pas pouvoir attaquer
+            return RandomUtils.tryChance(0.75); // 25% de chance de ne pas pouvoir attaquer
         }
         
         @Override
         public boolean tryRecovery(int turnsInStatus) {
-            return Math.random() < 0.3; // 30% de chance de récupérer
+            return RandomUtils.tryChance(0.3); // 30% de chance de récupérer
         }
 
         @Override
@@ -58,7 +59,7 @@ public enum StatusEffect {
         
         @Override
         public boolean tryRecovery(int turnsInStatus) {
-            return Math.random() < 0.2; // 20% de chance de récupérer
+            return RandomUtils.tryChance(0.2); // 20% de chance de récupérer
         }
 
         @Override
@@ -79,7 +80,7 @@ public enum StatusEffect {
         
         @Override
         public boolean tryRecovery(int turnsInStatus) {
-            return Math.random() < 0.15; // 15% de chance de récupérer
+            return RandomUtils.tryChance(0.15); // 15% de chance de récupérer
         }
 
         @Override

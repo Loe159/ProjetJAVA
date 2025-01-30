@@ -7,6 +7,7 @@ import com.monstredepoche.entities.items.Item;
 import com.monstredepoche.entities.Player;
 import com.monstredepoche.entities.StatusEffect;
 import com.monstredepoche.entities.monsters.Monster;
+import com.monstredepoche.utils.RandomUtils;
 
 import java.util.List;
 import java.util.Scanner;
@@ -274,7 +275,7 @@ public class Battle {
 
         else System.out.println(YELLOW + "\n" + attacker.getName() + " utilise " + attack.getName() + " !" + RESET);
         
-        if (Math.random() < attack.getFailRate()) {
+        if (RandomUtils.tryChance(attack.getFailRate())){
             System.out.println(RED + "L'attaque a échoué !" + RESET);
             return;
         }

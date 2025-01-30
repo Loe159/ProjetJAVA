@@ -1,5 +1,7 @@
 package com.monstredepoche.entities.monsters;
 
+import com.monstredepoche.utils.RandomUtils;
+
 public class WaterMonster extends Monster {
     private static final double FLOOD_CHANCE = 0.3;
 
@@ -9,7 +11,7 @@ public class WaterMonster extends Monster {
 
     @Override
     public void useSpecialAbility(Monster defender) {
-        if (getRandom().nextDouble() < FLOOD_CHANCE) {
+        if (RandomUtils.tryChance(FLOOD_CHANCE)) {
             setInFloodedTerrain(true);
             System.out.println(getName() + " inonde le terrain !");
         }

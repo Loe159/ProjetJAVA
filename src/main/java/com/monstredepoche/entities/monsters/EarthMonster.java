@@ -1,4 +1,5 @@
 package com.monstredepoche.entities.monsters;
+import com.monstredepoche.utils.RandomUtils;
 
 public class EarthMonster extends Monster {
     private static final double UNDERGROUND_CHANCE = 0.3;
@@ -15,7 +16,7 @@ public class EarthMonster extends Monster {
 
     @Override
     public void useSpecialAbility(Monster defender) {
-        if (!isUnderground && getRandom().nextDouble() < UNDERGROUND_CHANCE) {
+        if (!isUnderground && RandomUtils.tryChance(UNDERGROUND_CHANCE)) {
             goUnderground();
         }
     }
@@ -24,7 +25,7 @@ public class EarthMonster extends Monster {
         isUnderground = true;
         originalDefense = getDefense();
         boostDefense(originalDefense); // Double la défense
-        turnsUnderground = getRandom().nextInt(2) + 1; // 1 ou 2 tours
+        turnsUnderground = RandomUtils.getRandomInt(1, 2); // 1 ou 2 tours
         System.out.println(getName() + " s'enfonce sous terre !");
     }
 

@@ -1,6 +1,7 @@
 package com.monstredepoche.entities.monsters;
 
 import com.monstredepoche.entities.StatusEffect;
+import com.monstredepoche.utils.RandomUtils;
 
 public class FireMonster extends Monster {
     private static final double BURN_CHANCE = 0.3;
@@ -11,7 +12,7 @@ public class FireMonster extends Monster {
 
     @Override
     public void useSpecialAbility(Monster defender) {
-        if (getRandom().nextDouble() < BURN_CHANCE) {
+        if (RandomUtils.tryChance(BURN_CHANCE)) {
             defender.setStatus(StatusEffect.BURNED);
             System.out.println(getName() + " inflige une brûlure !");
         }

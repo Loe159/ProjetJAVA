@@ -6,22 +6,20 @@ import com.monstredepoche.entities.Player;
 import com.monstredepoche.entities.monsters.Monster;
 import com.monstredepoche.battle.Battle;
 import com.monstredepoche.loader.GameLoader;
+import com.monstredepoche.utils.RandomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 public class Game {
     private final GameLoader gameLoader;
     private final Scanner scanner;
-    private final Random random;
 
     public Game() {
         System.out.println("Initialisation du jeu...");
         this.gameLoader = new GameLoader();
         this.scanner = new Scanner(System.in);
-        this.random = new Random();
     }
 
     public void start() {
@@ -123,7 +121,7 @@ public class Game {
 
             System.out.println("\nCréation aléatoire de l'équipe de " + name);
             for (int i = 0; i < 3 && !availableMonsters.isEmpty(); i++) {
-                int monsterIndex = random.nextInt(availableMonsters.size());
+                int monsterIndex = RandomUtils.getRandomInt(0, availableMonsters.size());
                 Monster monster = availableMonsters.get(monsterIndex).clone();
                 List<Attack> compatibleAttacks = new ArrayList<>(gameLoader.getCompatibleAttacks(monster));
 
@@ -133,7 +131,7 @@ public class Game {
                 }
 
                 for (int j = 0; j < 3 && !compatibleAttacks.isEmpty(); j++) {
-                    int attackIndex = random.nextInt(compatibleAttacks.size());
+                    int attackIndex = RandomUtils.getRandomInt(0, compatibleAttacks.size());
                     Attack attack = compatibleAttacks.get(attackIndex);
                     monster.addAttack(attack);
                     compatibleAttacks.remove(attack);
@@ -183,7 +181,7 @@ public class Game {
         System.out.println("\nDistribution aléatoire des objets pour " + player.getName());
 
         for (int i = 0; i < 5 && !availableItems.isEmpty(); i++) {
-            int index = random.nextInt(availableItems.size());
+            int index = RandomUtils.getRandomInt(0, availableItems.size());
             Item selectedItem = availableItems.get(index);
             player.addItem(selectedItem);
             System.out.println(selectedItem.getName() + " ajouté à l'inventaire de " + player.getName());

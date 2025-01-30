@@ -3,10 +3,10 @@ package com.monstredepoche.entities.monsters;
 import com.monstredepoche.entities.attacks.Attack;
 import com.monstredepoche.entities.StatusEffect;
 import com.monstredepoche.entities.attacks.AttackType;
+import com.monstredepoche.utils.RandomUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public abstract class Monster implements Cloneable {
     private final String name;
@@ -20,7 +20,6 @@ public abstract class Monster implements Cloneable {
     private int turnsInStatus;
     private final List<Attack> attacks;
     private boolean isInFloodedTerrain;
-    private final Random random;
 
     protected Monster(String name, MonsterType type, int maxHp, int attack, int defense, int speed) {
         this.name = name;
@@ -34,7 +33,6 @@ public abstract class Monster implements Cloneable {
         this.turnsInStatus = 0;
         this.attacks = new ArrayList<>();
         this.isInFloodedTerrain = false;
-        this.random = new Random();
     }
 
     public void addAttack(Attack attack) {
@@ -156,12 +154,8 @@ public abstract class Monster implements Cloneable {
         this.isInFloodedTerrain = isInFloodedTerrain;
     }
 
-    protected Random getRandom() {
-        return random;
-    }
-
     public double calculateBasicDamage(Monster target) {
-        double coef = 0.85 + random.nextDouble() * 0.15;
+        double coef = RandomUtils.getRandomDouble(0.85, 1);
         return (20 * ((double)attack / target.getDefense()) * coef);
     }
 
@@ -172,7 +166,7 @@ public abstract class Monster implements Cloneable {
             return (int) (effectiveness * calculateBasicDamage(target));
         }
 
-        double coef = 0.85 + random.nextDouble() * 0.15;
+        double coef = RandomUtils.getRandomDouble(0.85, 1);
         
         double baseDamage = (11.0 * attack.getPower() * this.attack) / (25.0 * target.getDefense());
         double damage = (baseDamage + 2) * effectiveness * coef;

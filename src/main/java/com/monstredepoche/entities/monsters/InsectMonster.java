@@ -1,6 +1,7 @@
 package com.monstredepoche.entities.monsters;
 
 import com.monstredepoche.entities.StatusEffect;
+import com.monstredepoche.utils.RandomUtils;
 
 public class InsectMonster extends Monster {
     private static final double POISON_CHANCE = 0.3;
@@ -11,7 +12,7 @@ public class InsectMonster extends Monster {
 
     @Override
     public void useSpecialAbility(Monster defender) {
-        if (getRandom().nextDouble() < POISON_CHANCE) {
+        if (RandomUtils.tryChance(POISON_CHANCE)) {
             defender.setStatus(StatusEffect.POISONED);
             System.out.println(getName() + " empoisonne sa cible !");
         }

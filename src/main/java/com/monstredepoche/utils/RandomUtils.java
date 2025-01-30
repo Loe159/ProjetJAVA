@@ -1,6 +1,4 @@
 package com.monstredepoche.utils;
-
-import java.util.List;
 import java.util.Random;
 
 public class RandomUtils {
@@ -16,12 +14,5 @@ public class RandomUtils {
 
     public static double getRandomDouble(double min, double max) {
         return min + random.nextDouble() * (max - min);
-    }
-
-    public static <T> T getRandomElement(List<T> list) {
-        if (list == null || list.isEmpty()) {
-            return null;
-        }
-        return list.get(random.nextInt(list.size()));
     }
 } 
