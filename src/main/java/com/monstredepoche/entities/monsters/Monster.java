@@ -92,6 +92,12 @@ public abstract class Monster implements Cloneable {
                 status = StatusEffect.NORMAL;
                 System.out.println(name + " est guéri par l'eau !");
             }
+            
+            if (type == MonsterType.PLANT) {
+                int heal = maxHp / 20;
+                heal(heal);
+                System.out.println(name + " récupère " + heal + " PV grâce à l'eau !");
+            }
         }
     }
 
@@ -167,7 +173,7 @@ public abstract class Monster implements Cloneable {
 
         double coef = 0.85 + random.nextDouble() * 0.15;
         
-        double baseDamage = (11.0 * attack.getPower() * this.getAttack()) / (25.0 * target.getDefense());
+        double baseDamage = (11.0 * attack.getPower() * this.attack) / (25.0 * target.getDefense());
         double damage = (baseDamage + 2) * effectiveness * coef;
         
         return (int)damage;

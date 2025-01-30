@@ -1,7 +1,7 @@
 package com.monstredepoche.entities.monsters;
 
 public class EarthMonster extends Monster {
-    private static final double UNDERGROUND_CHANCE = 1;
+    private static final double UNDERGROUND_CHANCE = 0.3;
     private boolean isUnderground;
     private int turnsUnderground;
     private int originalDefense;
@@ -24,7 +24,7 @@ public class EarthMonster extends Monster {
         isUnderground = true;
         originalDefense = getDefense();
         boostDefense(originalDefense); // Double la défense
-        turnsUnderground = getRandom().nextInt(3) + 1; // 1 à 3 tours
+        turnsUnderground = getRandom().nextInt(2) + 1; // 1 ou 2 tours
         System.out.println(getName() + " s'enfonce sous terre !");
     }
 
