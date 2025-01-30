@@ -1,6 +1,8 @@
 package com.monstredepoche.battle;
 
 import com.monstredepoche.entities.attacks.Attack;
+import com.monstredepoche.entities.attacks.AttackType;
+import com.monstredepoche.entities.attacks.BareHandedAttack;
 import com.monstredepoche.entities.items.Item;
 import com.monstredepoche.entities.Player;
 import com.monstredepoche.entities.StatusEffect;
@@ -124,8 +126,11 @@ public class Battle {
                         }
                     }
                     case 2 -> {
-                        useItem(players[i]);
-                        actionSelected = true;
+                        boolean itemUsed = useItem(players[i]);
+                        if (itemUsed) {
+                            usedItems[i] = true;
+                            actionSelected = true;
+                        }
                     }
                     case 3 -> {
                         int switchChoice = selectMonsterToSwitch(players[i]);
@@ -168,9 +173,14 @@ public class Battle {
                 Player defender = players[1 - attackerIndex];
                 Attack attack = selectedAttacks[attackerIndex];
 
-                if (attack != null && attacker.getActiveMonster().canAttack()) {
+                if (attack != null) {
                     executeAttack(attacker.getActiveMonster(), defender.getActiveMonster(), attack);
-                    handleDeadMonster(defender);
+                }
+
+
+                if (handleDeadMonster(defender)) {
+                    // Si un monstre est K.O. et remplacé, on arrête les attaques pour ce tour
+                    break;
                 }
             }
         }
@@ -184,23 +194,32 @@ public class Battle {
         }
     }
 
-    private void useItem(Player player) {
+    private boolean useItem(Player player) {
+        Monster monster = player.getActiveMonster();
         List<Item> items = player.getItems();
         if (items.isEmpty()) {
-            System.out.println("Vous n'avez aucun objet !");
-            return;
+            System.out.println("Vous n'avez pas d'objets !");
+            return false;
         }
 
-        displayItemMenu(player);
-        String playerColor = player == player1 ? CYAN : PURPLE;
-        System.out.print("\n" + playerColor + "[" + player.getName() + "]" + RESET + " Choisissez un objet à utiliser (0 pour annuler) : ");
+        System.out.println("\nObjets disponibles :");
+        for (int i = 0; i < items.size(); i++) {
+            System.out.printf("%d. %s (%s)%n", i + 1, items.get(i).getName(), items.get(i).getDescription());
+        }
+
+        System.out.print("Votre choix (1-" + items.size() + ", 0 pour annuler): ");
         int choice = getIntInput(0, items.size());
-        if (choice == 0) return;
+
+        if (choice == 0) {
+            return false;
+        }
 
         Item selectedItem = items.get(choice - 1);
-        Monster target = player.getActiveMonster();
-        player.useItem(selectedItem, target);
-        System.out.println(player.getName() + " utilise " + selectedItem.getName() + " sur " + target.getName());
+        player.useItem(selectedItem, monster);
+
+        System.out.println("\n" + YELLOW + player.getName() + " utilise " + selectedItem.getName() + " sur " + monster.getName() + RESET + "\n");
+
+        return true;
     }
 
     private Attack selectAttack(Player player) {
@@ -212,65 +231,48 @@ public class Battle {
             return null;
         }
 
+
         List<Attack> attacks = monster.getAttacks();
         List<Attack> availableAttacks = attacks.stream()
-            .filter(a -> a.getRemainingUses() > 0)
-            .toList();
+                .filter(a -> a.getRemainingUses() > 0)
+                .toList();
 
         if (availableAttacks.isEmpty()) {
             System.out.println("\n" + RED + "Aucune attaque disponible pour " + monster.getName() + " !" + RESET);
             System.out.println(YELLOW + "Vous pouvez attaquer à la main (dégâts de base)" + RESET);
-            System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Voulez-vous attaquer à la main ? (O/N): ");
-            String choice = scanner.nextLine().trim().toUpperCase();
-            return choice.equals("O") ? null : selectAttack(player);
+            System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Votre choix (1 pour attaquer à la main, 0 pour annuler): ");
+            int choice = getIntInput(0, 1);
+            if (choice == 0) {
+                return null;
+            }
+            return new BareHandedAttack();// Attaque à la main
         }
 
         System.out.println("\nChoisissez une attaque pour " + monster.getName() + ":");
         for (int i = 0; i < availableAttacks.size(); i++) {
             Attack attack = availableAttacks.get(i);
             System.out.printf("%d. %s (Puissance: %d, Utilisations: %d/%d)%n",
-                i + 1,
-                attack.getName(),
-                attack.getPower(),
-                attack.getRemainingUses(),
-                attack.getMaxUses());
+                    i + 1,
+                    attack.getName(),
+                    attack.getPower(),
+                    attack.getRemainingUses(),
+                    attack.getMaxUses());
         }
 
-        while (true) {
-            System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Votre choix (1-" + attacks.size() + ", 0 pour annuler): ");
-            int choice = getIntInput(0, attacks.size());
-            if (choice == 0) {
-                return null;
-            }
-            Attack selectedAttack = attacks.get(choice - 1);
-            
-            if (selectedAttack.getRemainingUses() > 0) {
-                return selectedAttack;
-            } else {
-                System.out.println("Cette attaque ne peut plus être utilisée !");
-            }
+        System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Votre choix (1-" + availableAttacks.size() + ", 0 pour annuler): ");
+        int choice = getIntInput(0, availableAttacks.size());
+        if (choice == 0) {
+            return null;
         }
+        return availableAttacks.get(choice - 1);
     }
 
     private void executeAttack(Monster attacker, Monster defender, Attack attack) {
-        if (attack == null) {
-            // Attaque à la main
-            int damage = (int) attacker.calculateBasicDamage(defender);
-            defender.takeDamage(damage);
+        if (attack.getType() == AttackType.BAREHANDED) {
             System.out.println(YELLOW + "\n" + attacker.getName() + " attaque à la main !" + RESET);
-            System.out.printf(PURPLE + "%s inflige %d dégâts à %s !%n" + RESET, 
-                attacker.getName(), damage, defender.getName());
-            System.out.printf(GREEN + "Il reste %d/%d PV à %s%n" + RESET, 
-                defender.getCurrentHp(), defender.getMaxHp(), defender.getName());
-            return;
         }
 
-        if (attack.getRemainingUses() <= 0) {
-            System.out.println(RED + attacker.getName() + " ne peut plus utiliser " + attack.getName() + " !" + RESET);
-            return;
-        }
-
-        System.out.println(YELLOW + "\n" + attacker.getName() + " utilise " + attack.getName() + " !" + RESET);
+        else System.out.println(YELLOW + "\n" + attacker.getName() + " utilise " + attack.getName() + " !" + RESET);
         
         if (Math.random() < attack.getFailRate()) {
             System.out.println(RED + "L'attaque a échoué !" + RESET);
@@ -291,22 +293,22 @@ public class Battle {
         }
     }
 
-    private void handleDeadMonster(Player player) {
+    private boolean handleDeadMonster(Player player) {
         if (player.getActiveMonster().isDead() && !player.hasLost()) {
             player.removeMonster(player.getActiveMonster());
             System.out.println("\n" + player.getName() + ", votre monstre est K.O. !");
             System.out.println("Choisissez un nouveau monstre :");
-            
+
             List<Monster> monsters = player.getMonsters();
             String playerColor = player == player1 ? CYAN : PURPLE;
 
             for (int i = 0; i < monsters.size(); i++) {
                 Monster monster = monsters.get(i);
                 System.out.printf("%d. %s (PV: %d/%d)%n",
-                    i + 1,
-                    monster.getName(),
-                    monster.getCurrentHp(),
-                    monster.getMaxHp());
+                        i + 1,
+                        monster.getName(),
+                        monster.getCurrentHp(),
+                        monster.getMaxHp());
             }
 
             System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Votre choix (1-" + monsters.size() + "): ");
@@ -314,7 +316,9 @@ public class Battle {
             Monster selected = monsters.get(choice);
             player.switchMonster(choice);
             System.out.println(selected.getName() + ", à toi !");
+            return true; // Indique qu'un monstre a été remplacé
         }
+        return false; // Aucun remplacement n'a eu lieu
     }
 
     private boolean isOver() {

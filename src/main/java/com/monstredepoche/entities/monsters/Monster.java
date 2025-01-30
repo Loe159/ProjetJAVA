@@ -2,6 +2,7 @@ package com.monstredepoche.entities.monsters;
 
 import com.monstredepoche.entities.attacks.Attack;
 import com.monstredepoche.entities.StatusEffect;
+import com.monstredepoche.entities.attacks.AttackType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,7 +168,7 @@ public abstract class Monster implements Cloneable {
     public int calculateDamage(Attack attack, Monster target) {
         double effectiveness = attack.getEffectivenessAgainst(this.getType(), target.getType());
 
-        if (attack == null) {
+        if (attack.getType() == AttackType.BAREHANDED) {
             return (int) (effectiveness * calculateBasicDamage(target));
         }
 
