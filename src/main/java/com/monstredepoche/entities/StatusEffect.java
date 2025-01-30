@@ -49,7 +49,9 @@ public enum StatusEffect {
     BURNED {
         @Override
         public void applyEffect(Monster monster) {
-            monster.takeDamage(monster.getMaxHp() / 16); // 1/16 des PV max
+            int damageTaken = monster.getAttack() / 10; // 1/10 de l'attaque
+            monster.takeDamage(damageTaken);
+            System.out.println(monster.getName() + " perd " + damageTaken + " PV à cause de ses brûlures !");
         }
         
         @Override
@@ -70,7 +72,9 @@ public enum StatusEffect {
     POISONED {
         @Override
         public void applyEffect(Monster monster) {
-            monster.takeDamage(monster.getMaxHp() / 8); // 1/8 des PV max
+            int damageTaken = monster.getAttack() / 10; // 1/10 de l'attaque
+            monster.takeDamage(damageTaken);
+            System.out.println(monster.getName() + " perd " + damageTaken + " PV à cause du poison !");
         }
         
         @Override
