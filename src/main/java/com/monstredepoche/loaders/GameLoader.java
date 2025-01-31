@@ -82,7 +82,7 @@ public class GameLoader {
      */
     public List<Attack> getCompatibleAttacks(Monster monster) {
         return availableAttacks.stream()
-                .filter(attack -> attack.getType().getCorrespondingType().equals(monster.getType()) || attack.getType().equals(AttackType.NORMAL))
+                .filter(attack -> attack.getType().equals(AttackType.NORMAL) || attack.getType().getCorrespondingType().equals(monster.getType()))
                 .toList();
     }
 

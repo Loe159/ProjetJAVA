@@ -23,6 +23,14 @@ Fail: 0
 EndAttack
 
 Attack
+Name: Cage-Éclair
+Type: THUNDER
+Power: 0
+NbUse: 20
+Fail: 0.1
+EndAttack
+
+Attack
 Name: Pistolet à O
 Type: WATER
 Power: 40
@@ -42,6 +50,22 @@ Attack
 Name: Surf
 Type: WATER
 Power: 90
+NbUse: 15
+Fail: 0
+EndAttack
+
+Attack
+Name: Ébullition
+Type: WATER
+Power: 80
+NbUse: 15
+Fail: 0
+EndAttack
+
+Attack
+Name: Cascade
+Type: WATER
+Power: 80
 NbUse: 15
 Fail: 0
 EndAttack
@@ -71,6 +95,22 @@ Fail: 0.15
 EndAttack
 
 Attack
+Name: Surchauffe
+Type: FIRE
+Power: 130
+NbUse: 5
+Fail: 0.1
+EndAttack
+
+Attack
+Name: Feu Follet
+Type: FIRE
+Power: 0
+NbUse: 15
+Fail: 0.15
+EndAttack
+
+Attack
 Name: Fouet Lianes
 Type: PLANT
 Power: 45
@@ -92,6 +132,22 @@ Type: PLANT
 Power: 55
 NbUse: 25
 Fail: 0.05
+EndAttack
+
+Attack
+Name: Tempête Verte
+Type: PLANT
+Power: 130
+NbUse: 5
+Fail: 0.1
+EndAttack
+
+Attack
+Name: Canon Graine
+Type: PLANT
+Power: 80
+NbUse: 15
+Fail: 0
 EndAttack
 
 Attack
@@ -119,6 +175,22 @@ Fail: 0
 EndAttack
 
 Attack
+Name: Plaie-Croix
+Type: INSECT
+Power: 80
+NbUse: 15
+Fail: 0
+EndAttack
+
+Attack
+Name: Mégacorne
+Type: INSECT
+Power: 120
+NbUse: 10
+Fail: 0
+EndAttack
+
+Attack
 Name: Séisme
 Type: EARTH
 Power: 100
@@ -139,5 +211,69 @@ Name: Jet-Pierres
 Type: EARTH
 Power: 50
 NbUse: 15
+Fail: 0
+EndAttack
+
+Attack
+Name: Charge
+Type: NORMAL
+Power: 40
+NbUse: 35
+Fail: 0
+EndAttack
+
+Attack
+Name: Vive-Attaque
+Type: NORMAL
+Power: 40
+NbUse: 30
+Fail: 0
+EndAttack
+
+Attack
+Name: Météores
+Type: NORMAL
+Power: 60
+NbUse: 20
+Fail: 0
+EndAttack
+
+Attack
+Name: Damoclès
+Type: NORMAL
+Power: 120
+NbUse: 15
+Fail: 0.2
+EndAttack
+
+Attack
+Name: Bélier
+Type: NORMAL
+Power: 90
+NbUse: 20
+Fail: 0.1
+EndAttack
+
+Attack
+Name: Coud'Boule
+Type: NORMAL
+Power: 70
+NbUse: 15
+Fail: 0.05
+EndAttack
+
+Attack
+Name: Ultimapoing
+Type: NORMAL
+Power: 80
+NbUse: 15
+Fail: 0
+EndAttack
+
+Attack
+Name: Ultimawashi
+Type: NORMAL
+Power: 100
+NbUse: 10
 Fail: 0
 EndAttack

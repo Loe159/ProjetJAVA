@@ -42,6 +42,7 @@ public class AttackLoader extends Loader<Attack> {
             case PLANT -> new PlantAttack(name, power, nbUse, fail);
             case EARTH -> new EarthAttack(name, power, nbUse, fail);
             case INSECT -> new InsectAttack(name, power, nbUse, fail);
+            case NORMAL -> new NormalAttack(name, power, nbUse, fail);
             default -> throw new IllegalArgumentException("Type d'attaque non supporté : " + type);
         };
     }

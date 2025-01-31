@@ -42,19 +42,19 @@ public class Game {
             throw new RuntimeException("Aucun monstre n'a été chargé !");
         }
 
-        List<Item> items = gameLoader.getAvailableItems();
-            // Distribution des monstres et des objets
-            if (choice == 1) {
-                player1 = createPlayer("Joueur 1");
-                distributeItems(player1);
-                player2 = createPlayer("Joueur 2");
-                distributeItems(player2);
-            } else {
-                player1 = createRandomPlayer("Joueur 1");
-                distributeRandomItems(player1);
-                player2 = createRandomPlayer("Joueur 2");
-                distributeRandomItems(player2);
-            }
+        // Distribution des monstres et des objets
+        if (choice == 1) {
+            player1 = createPlayer("Joueur 1");
+            distributeItems(player1);
+            player2 = createPlayer("Joueur 2");
+            distributeItems(player2);
+        } else {
+            player1 = createRandomPlayer("Joueur 1");
+            distributeRandomItems(player1);
+            player2 = createRandomPlayer("Joueur 2");
+            distributeRandomItems(player2);
+        }
+
 
         Battle battle = new Battle(player1, player2);
         battle.start();
