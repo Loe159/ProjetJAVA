@@ -7,6 +7,7 @@ import com.monstredepoche.entities.monsters.Monster;
 import com.monstredepoche.battle.Battle;
 import com.monstredepoche.loaders.GameLoader;
 import com.monstredepoche.utils.RandomUtils;
+import com.monstredepoche.utils.FormatUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,25 +17,30 @@ public class Game {
     private final GameLoader gameLoader;
     private final Scanner scanner;
 
+    public static void main(String[] args) {
+        Game game = new Game();
+        game.start();
+    }
+
     public Game() {
-        System.out.println("Initialisation du jeu...");
+        System.out.println(FormatUtils.colorize("Initialisation du jeu...", FormatUtils.BLUE));
         this.gameLoader = new GameLoader();
         this.scanner = new Scanner(System.in);
     }
 
     public void start() {
-            System.out.println("=== Pocket Monster ===");
-            System.out.println("1. Configuration manuelle");
-            System.out.println("2. Configuration aléatoire rapide");
-            System.out.print("Votre choix (1-2): ");
+        System.out.println(FormatUtils.formatBattleHeader("POCKET MONSTER"));
+        System.out.println(FormatUtils.colorize("\n1. ", FormatUtils.BLUE) + "Configuration manuelle");
+        System.out.println(FormatUtils.colorize("2. ", FormatUtils.BLUE) + "Configuration aléatoire rapide");
+        System.out.print(FormatUtils.colorize("\nVotre choix (1-2): ", FormatUtils.YELLOW));
 
-            int choice = getIntInput(1, 2);
-            Player player1, player2;
+        int choice = getIntInput(1, 2);
+        Player player1, player2;
 
-            List<Monster> availableMonsters = new ArrayList<>(gameLoader.getAvailableMonsters());
-            if (availableMonsters.isEmpty()) {
-                throw new RuntimeException("Aucun monstre n'a été chargé !");
-            }
+        List<Monster> availableMonsters = new ArrayList<>(gameLoader.getAvailableMonsters());
+        if (availableMonsters.isEmpty()) {
+            throw new RuntimeException("Aucun monstre n'a été chargé !");
+        }
 
         List<Item> items = gameLoader.getAvailableItems();
             // Distribution des monstres et des objets
@@ -50,8 +56,8 @@ public class Game {
                 distributeRandomItems(player2);
             }
 
-            Battle battle = new Battle(player1, player2);
-            battle.start();
+        Battle battle = new Battle(player1, player2);
+        battle.start();
     }
 
     private Player createPlayer(String name) {
@@ -163,35 +169,39 @@ public class Game {
     }
 
     private void displayItemList(List<Item> items) {
-        System.out.println("\nObjets disponibles:");
+        System.out.println(FormatUtils.colorize("\nObjets disponibles:", FormatUtils.UNDERLINE));
         for (int i = 0; i < items.size(); i++) {
-            System.out.printf("%d. %s %s%n", i + 1, items.get(i).getName(), items.get(i).getDescription());
+            Item item = items.get(i);
+            System.out.println(FormatUtils.colorize((i + 1) + ". ", FormatUtils.BLUE) +
+                FormatUtils.formatItemInfo(item.getName(), item.getDescription())
+            );
         }
     }
 
     private void displayMonsterList(List<Monster> monsters) {
         for (int i = 0; i < monsters.size(); i++) {
             Monster monster = monsters.get(i);
-            System.out.printf("%d. %s (Type: %s, PV: %d, Attaque: %d, Défense: %d, Vitesse: %d)%n",
-                i + 1,
-                monster.getName(),
-                monster.getType(),
-                monster.getMaxHp(),
-                monster.getAttack(),
-                monster.getDefense(),
-                monster.getSpeed());
+            System.out.println(FormatUtils.colorize((i + 1) + ". ", FormatUtils.BLUE) +
+                FormatUtils.formatMonsterInfo(
+                    monster.getName(),
+                    monster.getType(),
+                    monster.getMaxHp(),
+                    monster.getAttack(),
+                    monster.getDefense(),
+                    monster.getSpeed()
+                )
+            );
         }
     }
 
     private void displayAttackList(List<Attack> attacks) {
         for (int i = 0; i < attacks.size(); i++) {
             Attack attack = attacks.get(i);
-            System.out.printf("%d. %s (Puissance: %d, Utilisations: %d, Taux d'échec: %.1f%%)%n",
-                i + 1,
-                attack.getName(),
-                attack.getPower(),
-                attack.getMaxUses(),
-                attack.getFailRate() * 100);
+            System.out.printf(FormatUtils.colorize((i + 1) + ". ", FormatUtils.BLUE) + "%s (Puissance: %d, Utilisations: %d, Taux d'échec: %.1f%%)%n",
+                    attack.getName(),
+                    attack.getPower(),
+                    attack.getRemainingUses(),
+                    attack.getFailRate() * 100);
         }
     }
 

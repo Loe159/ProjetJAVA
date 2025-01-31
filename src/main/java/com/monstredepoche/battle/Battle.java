@@ -2,27 +2,17 @@ package com.monstredepoche.battle;
 
 import com.monstredepoche.entities.attacks.Attack;
 import com.monstredepoche.entities.attacks.AttackType;
-import com.monstredepoche.entities.attacks.BareHandedAttack;
 import com.monstredepoche.entities.items.Item;
 import com.monstredepoche.entities.Player;
-import com.monstredepoche.entities.StatusEffect;
 import com.monstredepoche.entities.monsters.Monster;
 import com.monstredepoche.entities.monsters.WaterMonster;
 import com.monstredepoche.utils.RandomUtils;
+import com.monstredepoche.utils.FormatUtils;
 
 import java.util.List;
 import java.util.Scanner;
 
 public class Battle {
-    // Codes couleur ANSI
-    private static final String RESET = "\u001B[0m";
-    private static final String RED = "\u001B[31m";
-    private static final String GREEN = "\u001B[32m";
-    private static final String YELLOW = "\u001B[33m";
-    private static final String BLUE = "\u001B[34m";
-    private static final String PURPLE = "\u001B[35m";
-    private static final String CYAN = "\u001B[36m";
-
     private final Player player1;
     private final Player player2;
     private final Scanner scanner;
@@ -34,7 +24,7 @@ public class Battle {
     }
 
     public void start() {
-        displayBanner();
+        System.out.println(FormatUtils.formatBattleHeader("Début du combat"));
         
         while (!isOver()) {
             displayStatus();
@@ -44,64 +34,34 @@ public class Battle {
         announceWinner();
     }
 
-    private void displayBanner() {
-        System.out.println(YELLOW + """
-        ╔══════════════════════════════════════╗
-        ║            Début du combat           ║
-        ╚══════════════════════════════════════╝""" + RESET);
-    }
-
     private void displayStatus() {
-        System.out.println(BLUE + "\n╔═══════════════ ÉTAT DU COMBAT ══════════════════════════════════════╗" + RESET);
+        System.out.println(FormatUtils.formatBattleHeader("ÉTAT DU COMBAT"));
+        System.out.println(FormatUtils.colorize("╔═════════════════════════════════════════════════════════════════════╗", FormatUtils.BLUE));
         displayMonsterStatus(player1);
-        System.out.println(BLUE + "║                   VS                                                ║" + RESET);
+        System.out.println(FormatUtils.colorize("║                   VS                                                ║", FormatUtils.BLUE));
         displayMonsterStatus(player2);
-        System.out.println(BLUE + "╚═════════════════════════════════════════════════════════════════════╝\n" + RESET);
+        System.out.println(FormatUtils.colorize("╚═════════════════════════════════════════════════════════════════════╝\n", FormatUtils.BLUE));
     }
 
     private void displayMonsterStatus(Player player) {
         Monster monster = player.getActiveMonster();
-        String healthBar = createHealthBar(monster.getCurrentHp(), monster.getMaxHp());
-        String playerName = player == player1 ? CYAN + player.getName() + RESET : PURPLE + player.getName() + RESET;
-        System.out.printf(BLUE + "║" + RESET + " %-30s %-15s %s %s " + BLUE + "║\n" + RESET,
+        String healthBar = FormatUtils.formatHealthBar(monster.getCurrentHp(), monster.getMaxHp());
+        String playerName = FormatUtils.colorizePlayer(player.getName(), player == player1);
+        String monsterInfo = String.format("%-17s %-20s %-5s %-3s",
             playerName,
-            monster.getName(),
+            FormatUtils.colorize(monster.getName(), FormatUtils.BOLD),
             healthBar,
-            formatStatus(monster.getStatus()));
-    }
-
-    private String createHealthBar(int current, int max) {
-        int barLength = 20;
-        int filledLength = (int)((double)current / max * barLength);
-        StringBuilder bar = new StringBuilder("[");
-        
-        for (int i = 0; i < barLength; i++) {
-            if (i < filledLength) {
-                bar.append(GREEN + "█" + RESET);
-            } else {
-                bar.append(RED + "░" + RESET);
-            }
-        }
-        bar.append(String.format("] %d/%d", current, max));
-        return bar.toString();
-    }
-
-    private String formatStatus(StatusEffect status) {
-        return switch (status) {
-            case NORMAL -> "";
-            case PARALYZED -> YELLOW + "(PAR)" + RESET;
-            case BURNED -> RED + "(BRU)" + RESET;
-            case POISONED -> PURPLE + "(PSN)" + RESET;
-        };
+            FormatUtils.formatStatus(monster.getStatus().toString())
+        );
+        System.out.println(FormatUtils.colorize("║", FormatUtils.BLUE) + " " + monsterInfo +
+            FormatUtils.colorize("              ║", FormatUtils.BLUE));
     }
 
     private void displayMenu(String playerName) {
-        System.out.println(CYAN + String.format("""
-        ╔═══════════ TOUR DE %s ══════════╗
-        ║ 1. Attaquer                           ║
-        ║ 2. Utiliser un objet                  ║
-        ║ 3. Changer de monstre                 ║
-        ╚═══════════════════════════════════════╝""", playerName) + RESET);
+        System.out.println(FormatUtils.formatBattleHeader("TOUR DE " + playerName));
+        System.out.println(FormatUtils.colorize("1. ", FormatUtils.BLUE) + "Attaquer");
+        System.out.println(FormatUtils.colorize("2. ", FormatUtils.BLUE) + "Utiliser un objet");
+        System.out.println(FormatUtils.colorize("3. ", FormatUtils.BLUE) + "Changer de monstre");
     }
 
     private void executeTurn() {
@@ -115,8 +75,8 @@ public class Battle {
             boolean actionSelected = false;
             while (!actionSelected) {
                 displayMenu(players[i].getName());
-                String playerColor = players[i] == player1 ? CYAN : PURPLE;
-                System.out.print(playerColor + "[" + players[i].getName() + "]" + RESET + " Votre choix (1-3): ");
+                String playerColor = players[i] == player1 ? FormatUtils.CYAN : FormatUtils.PURPLE;
+                System.out.print(playerColor + "[" + players[i].getName() + "]" + FormatUtils.RESET + " Votre choix (1-3): ");
 
                 int choice = getIntInput(1, 3);
                 switch (choice) {
@@ -172,7 +132,9 @@ public class Battle {
                 Player defender = players[1 - attackerIndex];
                 Attack attack = selectedAttacks[attackerIndex];
 
-                executeAttack(attacker.getActiveMonster(), defender.getActiveMonster(), attack);
+                if (attack != null) {
+                    executeAttack(attacker.getActiveMonster(), defender.getActiveMonster(), attack);
+                }
 
                 // Si un monstre est K.O. on arrête les attaques pour ce tour
                 if (handleDeadMonster(defender)) {
@@ -196,22 +158,24 @@ public class Battle {
     private Item selectItem(Player player) {
         List<Item> items = player.getItems();
         if (items.isEmpty()) {
-            System.out.println("Vous n'avez pas d'objets !");
+            System.out.println(FormatUtils.colorize("Vous n'avez plus d'objets !", FormatUtils.RED));
             return null;
         }
 
-        System.out.println("\nObjets disponibles :");
+        System.out.println("\nChoisissez un objet :");
         for (int i = 0; i < items.size(); i++) {
-            System.out.printf("%d. %s (%s)%n", i + 1, items.get(i).getName(), items.get(i).getDescription());
+            Item item = items.get(i);
+            System.out.println(FormatUtils.colorize((i + 1) + ". ", FormatUtils.BLUE) +
+                FormatUtils.formatItemInfo(item.getName(), item.getDescription())
+            );
         }
 
-        System.out.print("Votre choix (1-" + items.size() + ", 0 pour annuler): ");
+        System.out.print(FormatUtils.formatActionPrompt(player.getName(), player == player1) +
+            "Votre choix (1-" + items.size() + ", 0 pour annuler): ");
         int choice = getIntInput(0, items.size());
-
         if (choice == 0) {
             return null;
         }
-
         return items.get(choice - 1);
     }
 
@@ -219,42 +183,26 @@ public class Battle {
         Monster monster = player.getActiveMonster();
         player.useItem(item, player.getActiveMonster());
 
-        System.out.println("\n" + YELLOW + player.getName() + " utilise " + item.getName() + " sur " + monster.getName() + RESET + "\n");
+        System.out.println("\n" + FormatUtils.YELLOW + player.getName() + " utilise " + item.getName() + " sur " + monster.getName() + FormatUtils.RESET + "\n");
     }
 
     private Attack selectAttack(Player player) {
         Monster monster = player.getActiveMonster();
-        String playerColor = player == player1 ? CYAN : PURPLE;
-
-        List<Attack> attacks = monster.getAttacks();
-        List<Attack> availableAttacks = attacks.stream()
-                .filter(a -> a.getRemainingUses() > 0)
-                .toList();
-
-        // Plus d'attaques disponibles, attaque à la main,
-        if (availableAttacks.isEmpty()) {
-            System.out.println("\n" + RED + "Aucune attaque disponible pour " + monster.getName() + " !" + RESET);
-            System.out.println(YELLOW + "Vous pouvez attaquer à la main (dégâts de base)" + RESET);
-            System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Votre choix (1 pour attaquer à la main, 0 pour annuler): ");
-            int choice = getIntInput(0, 1);
-            if (choice == 0) {
-                return null;
-            }
-            return new BareHandedAttack();
-        }
+        List<Attack> availableAttacks = monster.getAttacks();
+        String playerColor = player == player1 ? FormatUtils.CYAN : FormatUtils.PURPLE;
 
         System.out.println("\nChoisissez une attaque pour " + monster.getName() + ":");
         for (int i = 0; i < availableAttacks.size(); i++) {
             Attack attack = availableAttacks.get(i);
-            System.out.printf("%d. %s (Puissance: %d, Utilisations: %d/%d)%n",
-                    i + 1,
+            System.out.printf(FormatUtils.colorize((i + 1) + ". ", FormatUtils.BLUE) + "%s (Puissance: %d, Utilisations: %d, Taux d'échec: %.1f%%)%n",
                     attack.getName(),
                     attack.getPower(),
                     attack.getRemainingUses(),
-                    attack.getMaxUses());
+                    attack.getFailRate() * 100);
         }
 
-        System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Votre choix (1-" + availableAttacks.size() + ", 0 pour annuler): ");
+        System.out.print(FormatUtils.formatActionPrompt(player.getName(), player == player1) +
+            "Votre choix (1-" + availableAttacks.size() + ", 0 pour annuler): ");
         int choice = getIntInput(0, availableAttacks.size());
         if (choice == 0) {
             return null;
@@ -263,20 +211,26 @@ public class Battle {
     }
 
     private void executeAttack(Monster attacker, Monster defender, Attack attack) {
-        if (attack.getType() == AttackType.BAREHANDED) {
-            System.out.println(YELLOW + "\n" + attacker.getName() + " attaque à la main !" + RESET);
-        }
+        String attackerName = FormatUtils.colorize(attacker.getName(), FormatUtils.BOLD);
+        String defenderName = FormatUtils.colorize(defender.getName(), FormatUtils.BOLD);
 
-        else System.out.println(YELLOW + "\n" + attacker.getName() + " utilise " + attack.getName() + " !" + RESET);
+        if (attack.getType() == AttackType.BAREHANDED) {
+            System.out.println(FormatUtils.colorize("\n" + attackerName + " attaque à la main !", FormatUtils.YELLOW));
+        } else {
+            System.out.println(FormatUtils.colorize("\n" + attackerName + " utilise " +
+                FormatUtils.BOLD + attack.getName() + FormatUtils.RESET + " !", FormatUtils.YELLOW));
+        }
         
-        // Vérification du glissement sur terrain inondé
         if (WaterMonster.shouldSlip(attacker)) {
-            System.out.println(RED + attacker.getName() + " glisse sur le terrain inondé et se blesse, son attaque échoue !" + RESET);
+            int selfDamage = attacker.calculateDamage(attack, attacker) / 4;
+            attacker.takeDamage(selfDamage);
+            System.out.println(FormatUtils.colorize(attackerName + " glisse sur le terrain inondé et se blesse !", FormatUtils.RED));
+            System.out.println(FormatUtils.colorize(attackerName + " perd " + selfDamage + " PV !", FormatUtils.RED));
             return;
         }
         
         if (RandomUtils.tryChance(attack.getFailRate())) {
-            System.out.println(RED + "L'attaque a échoué !" + RESET);
+            System.out.println(FormatUtils.colorize("L'attaque a échoué !", FormatUtils.RED));
             return;
         }
 
@@ -284,18 +238,17 @@ public class Battle {
         defender.takeDamage(damage);
         attack.use();
 
-        System.out.printf(PURPLE + "%s inflige %d dégâts à %s !%n" + RESET, 
-            attacker.getName(), damage, defender.getName());
-        System.out.printf(GREEN + "Il reste %d/%d PV à %s%n" + RESET, 
-            defender.getCurrentHp(), defender.getMaxHp(), defender.getName());
+        System.out.println(FormatUtils.colorize(attackerName + " inflige " + damage + " dégâts à " + defenderName + " !",
+            FormatUtils.PURPLE));
+        System.out.println(FormatUtils.formatHealthBar(defender.getCurrentHp(), defender.getMaxHp()) +
+            FormatUtils.colorize(" PV:" + defender.getCurrentHp() + "/" + defender.getMaxHp(), FormatUtils.GREEN));
 
-        // Activation de la capacité spéciale après une attaque réussie
         if (attack.isSpecial()) {
             attacker.useSpecialAbility(defender);
         }
 
         if (defender.isDead()) {
-            System.out.println(RED + defender.getName() + " est K.O. !" + RESET);
+            System.out.println(FormatUtils.colorize(defenderName + " est K.O. !", FormatUtils.RED));
         }
     }
 
@@ -306,7 +259,7 @@ public class Battle {
             System.out.println("Choisissez un nouveau monstre :");
 
             List<Monster> monsters = player.getMonsters();
-            String playerColor = player == player1 ? CYAN : PURPLE;
+            String playerColor = player == player1 ? FormatUtils.CYAN : FormatUtils.PURPLE;
 
             for (int i = 0; i < monsters.size(); i++) {
                 Monster monster = monsters.get(i);
@@ -317,7 +270,7 @@ public class Battle {
                         monster.getMaxHp());
             }
 
-            System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Votre choix (1-" + monsters.size() + "): ");
+            System.out.print(playerColor + "[" + player.getName() + "]" + FormatUtils.RESET + " Votre choix (1-" + monsters.size() + "): ");
             int choice = getIntInput(1, monsters.size()) - 1;
             Monster selected = monsters.get(choice);
             player.switchMonster(choice);
@@ -333,12 +286,7 @@ public class Battle {
 
     private void announceWinner() {
         Player winner = player1.hasLost() ? player2 : player1;
-        String banner = String.format(YELLOW + """
-        ╔══════════════════════════════════════╗
-        ║             VICTOIRE DE              ║
-        ║           %15s            ║
-        ╚══════════════════════════════════════╝""" + RESET, winner.getName());
-        System.out.println(banner);
+        System.out.println(FormatUtils.formatBattleHeader("VICTOIRE DE " + winner.getName()));
     }
 
     private int getIntInput(int min, int max) {
@@ -356,34 +304,24 @@ public class Battle {
     }
 
     private int selectMonsterToSwitch(Player player) {
-        String playerColor = player == player1 ? CYAN : PURPLE;
-        System.out.println(playerColor + "[" + player.getName() + "]" + RESET + " choisissez un nouveau monstre:");
+        System.out.println("\nChoisissez un nouveau monstre :");
         for (int i = 0; i < player.getMonsters().size(); i++) {
             Monster monster = player.getMonsters().get(i);
-            System.out.printf("%d. %s (PV: %d/%d)%n", 
-                i + 1, monster.getName(), monster.getCurrentHp(), monster.getMaxHp());
+            System.out.println(FormatUtils.colorize((i + 1) + ". ", FormatUtils.BLUE) +
+                FormatUtils.formatMonsterInfo(
+                    monster.getName(),
+                    monster.getType(),
+                    monster.getCurrentHp(),
+                    monster.getAttack(),
+                    monster.getDefense(),
+                    monster.getSpeed()
+                )
+            );
         }
 
-        while (true) {
-            try {
-                System.out.print(playerColor + "[" + player.getName() + "]" + RESET + " Votre choix (1-" + player.getMonsters().size() + ", 0 pour annuler): ");
-                int choice = Integer.parseInt(scanner.nextLine());
-                if (choice == 0) {
-                    return -1;
-                }
-                choice--;
-                if (choice >= 0 && choice < player.getMonsters().size()) {
-                    Monster selected = player.getMonsters().get(choice);
-                    if (!selected.isDead() && selected != player.getActiveMonster()) {
-                        return choice;
-                    }
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Veuillez entrer un nombre valide");
-            } catch (Exception e) {
-                System.err.println("Erreur lors du changement de monstre: " + e.getMessage());
-            }
-            System.out.println("Choix invalide, réessayez.");
-        }
+        System.out.print(FormatUtils.formatActionPrompt(player.getName(), player == player1) +
+            "Votre choix (1-" + player.getMonsters().size() + "): ");
+        int choice = getIntInput(1, player.getMonsters().size());
+        return choice - 1;
     }
 } 
