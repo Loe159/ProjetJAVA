@@ -36,28 +36,18 @@ public class Game {
                 throw new RuntimeException("Aucun monstre n'a été chargé !");
             }
 
+        List<Item> items = gameLoader.getAvailableItems();
+            // Distribution des monstres et des objets
             if (choice == 1) {
                 player1 = createPlayer("Joueur 1");
+                distributeItems(player1);
                 player2 = createPlayer("Joueur 2");
+                distributeItems(player2);
             } else {
                 player1 = createRandomPlayer("Joueur 1");
+                distributeRandomItems(player1);
                 player2 = createRandomPlayer("Joueur 2");
-            }
-
-            // Distribution des objets
-            List<Item> items = gameLoader.getAvailableItems();
-            if (!items.isEmpty()) {
-                if (choice == 1) {
-                    distributeItems(player1);
-                    distributeItems(player2);
-                } else {
-                    distributeRandomItems(player1);
-                    distributeRandomItems(player2);
-                }
-            }
-
-            if (player1.getMonsters().isEmpty() || player2.getMonsters().isEmpty()) {
-                throw new RuntimeException("Les joueurs n'ont pas de monstres !");
+                distributeRandomItems(player2);
             }
 
             Battle battle = new Battle(player1, player2);
@@ -70,9 +60,6 @@ public class Game {
             System.out.println("\nConfiguration de " + name);
 
             List<Monster> availableMonsters = new ArrayList<>(gameLoader.getAvailableMonsters());
-            if (availableMonsters.isEmpty()) {
-                throw new RuntimeException("Aucun monstre disponible pour " + name);
-            }
 
             for (int i = 0; i < 3 && !availableMonsters.isEmpty(); i++) {
                 System.out.println("\nChoisissez le monstre " + (i + 1) + ":");
@@ -123,7 +110,7 @@ public class Game {
                     continue;
                 }
 
-                for (int j = 0; j < 3 && !compatibleAttacks.isEmpty(); j++) {
+                for (int j = 0; j < 4 && !compatibleAttacks.isEmpty(); j++) {
                     int attackIndex = RandomUtils.getRandomInt(0, compatibleAttacks.size() - 1);
                     Attack attack = compatibleAttacks.get(attackIndex);
                     monster.addAttack(attack);
@@ -135,19 +122,16 @@ public class Game {
                 System.out.println(monster.getName() + " ajouté à l'équipe de " + name);
             }
 
-            if (player.getMonsters().isEmpty()) {
-                throw new RuntimeException("Impossible de créer une équipe pour " + name);
-            }
-
             return player;
     }
 
     private void distributeItems(Player player) {
-        System.out.println("\nDistribution des objets pour " + player.getName() + ":");
-        System.out.println("Vous pouvez choisir jusqu'à 5 objets.");
-
         List<Item> availableItems = new ArrayList<>(gameLoader.getAvailableItems());
 
+        if (availableItems.isEmpty()) return;
+
+        System.out.println("\nDistribution des objets pour " + player.getName() + ":");
+        System.out.println("Vous pouvez choisir jusqu'à 5 objets.");
 
         for (int i = 0; i < 5 && !availableItems.isEmpty(); i++) {
             displayItemList(availableItems);
@@ -166,6 +150,7 @@ public class Game {
 
     private void distributeRandomItems(Player player) {
         List<Item> availableItems = new ArrayList<>(gameLoader.getAvailableItems());
+        if (availableItems.isEmpty()) return;
 
         System.out.println("\nDistribution aléatoire des objets pour " + player.getName());
 
@@ -235,7 +220,7 @@ public class Game {
                     return choice;
                 }
             } catch (NumberFormatException e) {
-                // Ignore
+                // Entrée invalide
             }
             System.out.println("Choix invalide, réessayez.");
         }
