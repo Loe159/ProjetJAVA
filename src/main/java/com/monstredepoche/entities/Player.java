@@ -40,7 +40,7 @@ public class Player {
     public void useItem(Item item, Monster target) {
         if (items.contains(item)) {
             item.use(target);
-            items.remove(item);  // L'objet est consommé après utilisation
+            items.remove(item);
         }
     }
 

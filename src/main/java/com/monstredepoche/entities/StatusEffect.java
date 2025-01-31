@@ -6,9 +6,7 @@ import com.monstredepoche.utils.RandomUtils;
 public enum StatusEffect {
     NORMAL {
         @Override
-        public void applyEffect(Monster monster) {
-            // Pas d'effet
-        }
+        public void applyEffect(Monster monster) {}
         
         @Override
         public boolean canAttack() {
@@ -27,9 +25,7 @@ public enum StatusEffect {
     },
     PARALYZED {
         @Override
-        public void applyEffect(Monster monster) {
-            // Effet géré par canAttack()
-        }
+        public void applyEffect(Monster monster) {}
         
         @Override
         public boolean canAttack() {
