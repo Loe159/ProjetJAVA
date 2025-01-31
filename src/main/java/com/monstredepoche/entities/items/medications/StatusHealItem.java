@@ -10,9 +10,6 @@ public class StatusHealItem extends Item {
 
     public StatusHealItem(String name, ItemType type, StatusEffect targetStatus) {
         super(name, type);
-        if (type != ItemType.ANTIDOTE && type != ItemType.ANTI_BURN) {
-            throw new IllegalArgumentException("Type d'objet invalide pour un soin de statut");
-        }
         this.targetStatus = targetStatus;
     }
 

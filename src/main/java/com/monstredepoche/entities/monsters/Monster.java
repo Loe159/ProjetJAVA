@@ -91,12 +91,6 @@ public abstract class Monster implements Cloneable {
                 status = StatusEffect.NORMAL;
                 System.out.println(name + " est guéri par l'eau !");
             }
-            
-            if (type == MonsterType.PLANT) {
-                int heal = maxHp / 20;
-                heal(heal);
-                System.out.println(name + " récupère " + heal + " PV grâce à l'eau !");
-            }
         }
     }
 

@@ -41,6 +41,7 @@ public class Player {
         if (items.contains(item)) {
             item.use(target);
             items.remove(item);
+
         }
     }
 

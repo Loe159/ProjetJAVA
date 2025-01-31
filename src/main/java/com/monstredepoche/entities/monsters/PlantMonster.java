@@ -9,14 +9,15 @@ public class PlantMonster extends Monster {
 
     @Override
     public void useSpecialAbility(Monster defender) {
-        // La guérison est gérée dans startTurn
     }
 
     @Override
     public void startTurn() {
         super.startTurn();
         if (isInFloodedTerrain()) {
-            heal(HEAL_AMOUNT);
+            int heal = this.getMaxHp() / 20;
+            heal(heal);
+            System.out.println(this.getName() + " récupère " + heal + " PV grâce à l'eau !");
         }
     }
 } 
