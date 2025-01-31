@@ -107,7 +107,7 @@ public class Battle {
     private void executeTurn() {
         Player[] players = {player1, player2};
         Attack[] selectedAttacks = new Attack[2];
-        boolean[] usedItems = new boolean[2];
+        Item[] selectedItem = new Item[2];
         int[] switchChoices = new int[2];
 
         // Phase de sélection
@@ -128,9 +128,8 @@ public class Battle {
                         }
                     }
                     case 2 -> {
-                        boolean itemUsed = useItem(players[i]);
-                        if (itemUsed) {
-                            usedItems[i] = true;
+                        selectedItem[i] = selectItem(players[i]);
+                        if (selectedItem[i] != null) {
                             actionSelected = true;
                         }
                     }
@@ -155,9 +154,8 @@ public class Battle {
 
         // 2. Utilisation des objets
         for (int i = 0; i < 2; i++) {
-            if (usedItems[i]) {
-                // L'utilisation de l'objet a déjà été effectuée dans useItem()
-                continue;
+            if (selectedItem[i] != null) {
+                useItem(players[i], selectedItem[i]);
             }
         }
 
@@ -165,29 +163,28 @@ public class Battle {
         if (selectedAttacks[0] != null || selectedAttacks[1] != null) {
             Monster monster1 = player1.getActiveMonster();
             Monster monster2 = player2.getActiveMonster();
-            boolean monster1First = monster1.getSpeed() > monster2.getSpeed();
+            boolean monster1First = monster1.getSpeed() >= monster2.getSpeed();
 
+            int attackerIndex = monster1First ? 0 : 1;
             for (int i = 0; i < 2; i++) {
-                int attackerIndex = monster1First ? 0 : 1;
-                if (i == 1) attackerIndex = 1 - attackerIndex;
 
                 Player attacker = players[attackerIndex];
                 Player defender = players[1 - attackerIndex];
                 Attack attack = selectedAttacks[attackerIndex];
 
-                if (attack != null) {
-                    executeAttack(attacker.getActiveMonster(), defender.getActiveMonster(), attack);
-                }
+                executeAttack(attacker.getActiveMonster(), defender.getActiveMonster(), attack);
 
-
+                // Si un monstre est K.O. on arrête les attaques pour ce tour
                 if (handleDeadMonster(defender)) {
-                    // Si un monstre est K.O. et remplacé, on arrête les attaques pour ce tour
                     break;
                 }
+
+                // Changement d'attaquant
+                attackerIndex = 1 - attackerIndex;
             }
         }
 
-        // Application des effets de statut à la fin du tour
+        // 4. Application des effets de statut
         for (int i = 0; i < 2; i++) {
             Monster monster = players[i].getActiveMonster();
             if (monster != null && !monster.isDead()) {
@@ -196,12 +193,11 @@ public class Battle {
         }
     }
 
-    private boolean useItem(Player player) {
-        Monster monster = player.getActiveMonster();
+    private Item selectItem(Player player) {
         List<Item> items = player.getItems();
         if (items.isEmpty()) {
             System.out.println("Vous n'avez pas d'objets !");
-            return false;
+            return null;
         }
 
         System.out.println("\nObjets disponibles :");
@@ -213,32 +209,29 @@ public class Battle {
         int choice = getIntInput(0, items.size());
 
         if (choice == 0) {
-            return false;
+            return null;
         }
 
-        Item selectedItem = items.get(choice - 1);
-        player.useItem(selectedItem, monster);
+        return items.get(choice - 1);
+    }
 
-        System.out.println("\n" + YELLOW + player.getName() + " utilise " + selectedItem.getName() + " sur " + monster.getName() + RESET + "\n");
+    private void useItem(Player player, Item item) {
+        Monster monster = player.getActiveMonster();
+        player.useItem(item, player.getActiveMonster());
 
-        return true;
+        System.out.println("\n" + YELLOW + player.getName() + " utilise " + item.getName() + " sur " + monster.getName() + RESET + "\n");
     }
 
     private Attack selectAttack(Player player) {
         Monster monster = player.getActiveMonster();
         String playerColor = player == player1 ? CYAN : PURPLE;
 
-        if (monster == null) {
-            System.err.println("ERREUR: Le monstre est null");
-            return null;
-        }
-
-
         List<Attack> attacks = monster.getAttacks();
         List<Attack> availableAttacks = attacks.stream()
                 .filter(a -> a.getRemainingUses() > 0)
                 .toList();
 
+        // Plus d'attaques disponibles, attaque à la main,
         if (availableAttacks.isEmpty()) {
             System.out.println("\n" + RED + "Aucune attaque disponible pour " + monster.getName() + " !" + RESET);
             System.out.println(YELLOW + "Vous pouvez attaquer à la main (dégâts de base)" + RESET);
@@ -247,7 +240,7 @@ public class Battle {
             if (choice == 0) {
                 return null;
             }
-            return new BareHandedAttack();// Attaque à la main
+            return new BareHandedAttack();
         }
 
         System.out.println("\nChoisissez une attaque pour " + monster.getName() + ":");
@@ -329,9 +322,9 @@ public class Battle {
             Monster selected = monsters.get(choice);
             player.switchMonster(choice);
             System.out.println(selected.getName() + ", à toi !");
-            return true; // Indique qu'un monstre a été remplacé
+            return true;
         }
-        return false; // Aucun remplacement n'a eu lieu
+        return false; // Le monstre n'est pas mort
     }
 
     private boolean isOver() {
@@ -363,11 +356,6 @@ public class Battle {
     }
 
     private int selectMonsterToSwitch(Player player) {
-        if (player == null || player.getMonsters().isEmpty()) {
-            System.out.println("Impossible de changer de monstre");
-            return -1;
-        }
-
         String playerColor = player == player1 ? CYAN : PURPLE;
         System.out.println(playerColor + "[" + player.getName() + "]" + RESET + " choisissez un nouveau monstre:");
         for (int i = 0; i < player.getMonsters().size(); i++) {
