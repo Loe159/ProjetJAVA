@@ -94,7 +94,6 @@ public class Game {
                 }
 
                 player.addMonster(selectedMonster);
-                availableMonsters.remove(selectedMonster);
                 System.out.println(selectedMonster.getName() + " ajouté à l'équipe de " + name);
             }
 
@@ -214,7 +213,9 @@ public class Game {
     private Monster selectMonster(List<Monster> monsters) {
         System.out.print("Votre choix (1-" + monsters.size() + "): ");
         int choice = getIntInput(1, monsters.size());
-        return monsters.get(choice - 1);
+        Monster monster = monsters.get(choice - 1);
+        monsters.remove(choice - 1);
+        return monster;
     }
 
     private Attack selectAttack(List<Attack> attacks) {
