@@ -1,8 +1,6 @@
 package com.monstredepoche.loaders;
 
-import com.monstredepoche.entities.attacks.Attack;
-import com.monstredepoche.entities.attacks.AttackFactory;
-import com.monstredepoche.entities.attacks.AttackType;
+import com.monstredepoche.entities.attacks.*;
 
 public class AttackLoader extends Loader<Attack> {
     private static final String ATTACKS_FILE = "src/main/resources/attacks.txt";
@@ -37,7 +35,15 @@ public class AttackLoader extends Loader<Attack> {
             throw new Exception("Données d'attaque incomplètes");
         }
 
-        return AttackFactory.createAttack(name, type, power, nbUse, fail);
+        return switch (type) {
+            case THUNDER -> new ThunderAttack(name, power, nbUse, fail);
+            case WATER -> new WaterAttack(name, power, nbUse, fail);
+            case FIRE -> new FireAttack(name, power, nbUse, fail);
+            case PLANT -> new PlantAttack(name, power, nbUse, fail);
+            case EARTH -> new EarthAttack(name, power, nbUse, fail);
+            case INSECT -> new InsectAttack(name, power, nbUse, fail);
+            default -> throw new IllegalArgumentException("Type d'attaque non supporté : " + type);
+        };
     }
 
     @Override
