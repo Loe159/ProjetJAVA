@@ -1,6 +1,7 @@
-package com.monstredepoche.loader;
+package com.monstredepoche.loaders;
 
 import com.monstredepoche.entities.attacks.Attack;
+import com.monstredepoche.entities.attacks.AttackType;
 import com.monstredepoche.entities.items.Item;
 import com.monstredepoche.entities.monsters.Monster;
 
@@ -33,38 +34,35 @@ public class GameLoader {
             availableMonsters = monsterLoader.loadEntities();
             System.out.println("Monstres chargés: " + availableMonsters.size());
             for (Monster monster : availableMonsters) {
-                System.out.println(monster.getName() + " - " + monster.getType());
+                System.out.println("\t" + monster.getName() + " - " + monster.getType());
             }
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement des monstres: " + e.getMessage());
-            availableMonsters = List.of();
         }
 
         try {
             // Chargement des attaques
             availableAttacks = attackLoader.loadEntities();
-            System.out.println("\nAttaques chargées: " + availableAttacks.size());
+            System.out.println("Attaques chargées: " + availableAttacks.size());
             for (Attack attack : availableAttacks) {
-                System.out.println(attack.getName() + " - " + attack.getType());
+                System.out.println("\t" + attack.getName() + " - " + attack.getType());
             }
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement des attaques: " + e.getMessage());
-            availableAttacks = List.of();
         }
 
         try {
             // Chargement des objets
             availableItems = itemLoader.loadEntities();
-            System.out.println("\nObjets chargés: " + availableItems.size());
+            System.out.println("Objets chargés: " + availableItems.size());
             for (Item item : availableItems) {
-                System.out.println(item.getName() + " - " + item.getDescription());
+                System.out.println("\t" + item.getName() + " - " + item.getDescription());
             }
         } catch (Exception e) {
             System.err.println("Erreur lors du chargement des objets: " + e.getMessage());
-            availableItems = List.of();
         }
 
-        System.out.println("Chargement terminé avec succès !");
+        System.out.println("\nChargement terminé avec succès !\n");
     }
 
     /**
@@ -73,9 +71,6 @@ public class GameLoader {
      * @return Liste de monstres
      */
     public List<Monster> getAvailableMonsters() {
-        if (availableMonsters.isEmpty()) {
-            System.err.println("ATTENTION: Aucun monstre disponible !");
-        }
         return new ArrayList<>(availableMonsters);
     }
 
@@ -87,7 +82,7 @@ public class GameLoader {
      */
     public List<Attack> getCompatibleAttacks(Monster monster) {
         return availableAttacks.stream()
-                .filter(attack -> attack.getType().toString().equals(monster.getType().toString()))
+                .filter(attack -> attack.getType().getCorrespondingType().equals(monster.getType()) || attack.getType().equals(AttackType.NORMAL))
                 .toList();
     }
 
@@ -97,9 +92,6 @@ public class GameLoader {
      * @return Liste d'objets
      */
     public List<Item> getAvailableItems() {
-        if (availableItems.isEmpty()) {
-            System.err.println("ATTENTION: Aucun objet disponible !");
-        }
         return new ArrayList<>(availableItems);
     }
 }

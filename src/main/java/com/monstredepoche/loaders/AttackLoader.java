@@ -1,10 +1,10 @@
-package com.monstredepoche.loader;
+package com.monstredepoche.loaders;
 
 import com.monstredepoche.entities.attacks.Attack;
 import com.monstredepoche.entities.attacks.AttackFactory;
 import com.monstredepoche.entities.attacks.AttackType;
 
-public class AttackLoader extends AbstractLoader<Attack> {
+public class AttackLoader extends Loader<Attack> {
     private static final String ATTACKS_FILE = "src/main/resources/attacks.txt";
 
     public AttackLoader() {

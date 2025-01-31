@@ -1,10 +1,10 @@
-package com.monstredepoche.loader;
+package com.monstredepoche.loaders;
 
 import com.monstredepoche.entities.items.Item;
 import com.monstredepoche.entities.items.ItemFactory;
 import com.monstredepoche.entities.items.ItemType;
 
-public class ItemLoader extends AbstractLoader<Item> {
+public class ItemLoader extends Loader<Item> {
     private static final String ITEMS_FILE = "src/main/resources/items.txt";
 
     public ItemLoader() {

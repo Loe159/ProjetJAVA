@@ -1,8 +1,8 @@
-package com.monstredepoche.loader;
+package com.monstredepoche.loaders;
 
 import com.monstredepoche.entities.monsters.*;
 
-public class MonsterLoader extends AbstractLoader<Monster> {
+public class MonsterLoader extends Loader<Monster> {
     private static final String MONSTERS_FILE = "src/main/resources/monsters.txt";
 
     public MonsterLoader() {

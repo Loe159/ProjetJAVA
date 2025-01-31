@@ -1,6 +1,8 @@
-package com.monstredepoche.loader;
+package com.monstredepoche.loaders;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -8,29 +10,29 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-public abstract class AbstractLoader<T> {
+public abstract class Loader<T> {
     private final String filePath;
     private final String endMarker;
     private final String entityName;
 
-    protected AbstractLoader(String filePath, String endMarker, String entityName) {
+    protected Loader(String filePath, String endMarker, String entityName) {
         this.filePath = filePath;
         this.endMarker = endMarker;
         this.entityName = entityName;
     }
 
-    public List<T> loadEntities() {
+    public List<T> loadEntities() throws IOException {
         List<T> entities = new ArrayList<>();
-        Path path = Paths.get(filePath);
-        System.out.println("Chargement des " + entityName + "s depuis: " + path.toAbsolutePath());
+        File file = new File(filePath);
+        System.out.println("\nChargement des " + entityName + "s depuis: " + file.getAbsolutePath());
 
-        try (BufferedReader reader = Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
-            String line;
+        try (Scanner scanner = new Scanner(file, StandardCharsets.UTF_8)) {
             StringBuilder entityData = new StringBuilder();
 
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().trim();
                 if (line.isEmpty()) continue;
 
                 entityData.append(line).append("\n");
@@ -40,7 +42,6 @@ public abstract class AbstractLoader<T> {
                         T entity = parseEntityData(entityData.toString());
                         if (entity != null) {
                             entities.add(entity);
-                            System.out.println(entityName + " chargé: " + getEntityName(entity));
                         }
                     } catch (Exception e) {
                         System.err.println("Erreur lors du parsing d'un " + entityName + ": " + e.getMessage());
@@ -48,12 +49,13 @@ public abstract class AbstractLoader<T> {
                     entityData = new StringBuilder();
                 }
             }
-        } catch (IOException e) {
-            System.err.println("Erreur lors de la lecture du fichier des " + entityName + "s: " + e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.err.println("Erreur : Fichier introuvable !");
         }
 
         return entities;
     }
+
 
     protected abstract T parseEntityData(String data) throws Exception;
     protected abstract String getEntityName(T entity);

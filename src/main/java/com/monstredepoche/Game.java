@@ -5,7 +5,7 @@ import com.monstredepoche.entities.items.Item;
 import com.monstredepoche.entities.Player;
 import com.monstredepoche.entities.monsters.Monster;
 import com.monstredepoche.battle.Battle;
-import com.monstredepoche.loader.GameLoader;
+import com.monstredepoche.loaders.GameLoader;
 import com.monstredepoche.utils.RandomUtils;
 
 import java.util.ArrayList;
