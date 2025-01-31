@@ -80,18 +80,6 @@ public class GameLoader {
     }
 
     /**
-     * Retourne la liste des attaques disponibles.
-     *
-     * @return Liste d'attaques
-     */
-    public List<Attack> getAvailableAttacks() {
-        if (availableAttacks.isEmpty()) {
-            System.err.println("ATTENTION: Aucune attaque disponible !");
-        }
-        return new ArrayList<>(availableAttacks);
-    }
-
-    /**
      * Retourne les attaques compatibles avec le type d'un monstre.
      *
      * @param monster Le monstre pour lequel trouver les attaques compatibles

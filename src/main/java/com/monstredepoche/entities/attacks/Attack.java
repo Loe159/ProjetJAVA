@@ -19,7 +19,7 @@ public abstract class Attack {
         this.failRate = failRate;
     }
 
-    public abstract double getEffectivenessAgainst(MonsterType attackerType, MonsterType defenderType);
+    public abstract double getEffectivenessAgainst(MonsterType defenderType);
 
     public void use() {
         if (remainingUses > 0) {

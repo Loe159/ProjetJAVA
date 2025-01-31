@@ -398,14 +398,4 @@ public class Battle {
             System.out.println("Choix invalide, réessayez.");
         }
     }
-
-    private void displayItemMenu(Player player) {
-        List<Item> items = player.getItems();
-        String playerColor = player == player1 ? CYAN : PURPLE;
-        System.out.println("\nObjets disponibles pour " + playerColor + player.getName() + RESET + ":");
-        for (int i = 0; i < items.size(); i++) {
-            Item item = items.get(i);
-            System.out.printf("%d. %s (%s)%n", i + 1, item.getName(), item.getDescription());
-        }
-    }
 } 

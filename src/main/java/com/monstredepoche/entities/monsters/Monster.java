@@ -160,7 +160,7 @@ public abstract class Monster implements Cloneable {
     }
 
     public int calculateDamage(Attack attack, Monster target) {
-        double effectiveness = attack.getEffectivenessAgainst(this.getType(), target.getType());
+        double effectiveness = attack.getEffectivenessAgainst(target.getType());
 
         if (attack.getType() == AttackType.BAREHANDED) {
             return (int) (effectiveness * calculateBasicDamage(target));

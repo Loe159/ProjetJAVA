@@ -240,32 +240,4 @@ public class Game {
             System.out.println("Choix invalide, réessayez.");
         }
     }
-
-    private void selectItems(Player player) {
-        List<Item> availableItems = gameLoader.getAvailableItems();
-        if (availableItems.isEmpty()) {
-            System.out.println("Aucun objet disponible !");
-            return;
-        }
-
-        System.out.println("\nChoisissez vos objets (maximum 5) :");
-        for (int i = 0; i < availableItems.size(); i++) {
-            Item item = availableItems.get(i);
-            System.out.printf("%d. %s (%s)%n", i + 1, item.getName(), item.getType());
-        }
-
-        while (player.getItems().size() < 5) {
-            System.out.print("\nEntrez le numéro de l'objet à ajouter (0 pour terminer) : ");
-            int choice = getIntInput(0, availableItems.size());
-            if (choice == 0) break;
-
-            Item selectedItem = availableItems.get(choice - 1);
-            player.addItem(selectedItem);
-            System.out.println("Objet ajouté : " + selectedItem.getName());
-        }
-    }
-
-    public static void main(String[] args) {
-        new Game().start();
-    }
 } 

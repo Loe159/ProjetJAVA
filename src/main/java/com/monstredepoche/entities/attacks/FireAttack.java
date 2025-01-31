@@ -8,7 +8,7 @@ public class FireAttack extends Attack {
     }
 
     @Override
-    public double getEffectivenessAgainst(MonsterType attackerType, MonsterType defenderType) {
+    public double getEffectivenessAgainst(MonsterType defenderType) {
         return switch (defenderType) {
             case PLANT, INSECT -> 2.0;  // Super efficace contre les plantes et les insectes
             case WATER -> 0.5;          // Peu efficace contre l'eau

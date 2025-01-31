@@ -8,7 +8,7 @@ public class EarthAttack extends Attack {
     }
 
     @Override
-    public double getEffectivenessAgainst(MonsterType attackerType, MonsterType defenderType) {
+    public double getEffectivenessAgainst(MonsterType defenderType) {
         return switch (defenderType) {
             case THUNDER -> 2.0;  // Super efficace contre la foudre
             case WATER -> 0.5;    // Peu efficace contre l'eau

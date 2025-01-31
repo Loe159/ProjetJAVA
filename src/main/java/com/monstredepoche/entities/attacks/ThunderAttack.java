@@ -8,7 +8,7 @@ public class ThunderAttack extends Attack {
     }
 
     @Override
-    public double getEffectivenessAgainst(MonsterType attackerType, MonsterType defenderType) {
+    public double getEffectivenessAgainst(MonsterType defenderType) {
         return switch (defenderType) {
             case WATER -> 2.0;  // Super efficace contre l'eau
             case EARTH -> 0.5;  // Peu efficace contre la terre

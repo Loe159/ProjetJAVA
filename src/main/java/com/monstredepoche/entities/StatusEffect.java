@@ -38,7 +38,8 @@ public enum StatusEffect {
         
         @Override
         public boolean tryRecovery(int turnsInStatus) {
-            return RandomUtils.tryChance(0.3); // 30% de chance de récupérer
+                double probability = (double) turnsInStatus / 6; // probabilité = nombre de tours passé dans cet état divisé par six
+                return RandomUtils.tryChance(probability);
         }
 
         @Override
